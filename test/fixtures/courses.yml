@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_at: 2025-03-07 09:06:46
+  end_at: 2025-03-07 09:06:46
+  week_day: 1
+  classe: one
+  subject: one
+  moment: one
+  person: one
+
+two:
+  start_at: 2025-03-07 09:06:46
+  end_at: 2025-03-07 09:06:46
+  week_day: 1
+  classe: two
+  subject: two
+  moment: two
+  person: two

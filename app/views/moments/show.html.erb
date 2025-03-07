@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @moment %>
+
+<div>
+  <%= link_to "Edit this moment", edit_moment_path(@moment) %> |
+  <%= link_to "Back to moments", moments_path %>
+
+  <%= button_to "Destroy this moment", @moment, method: :delete %>
+</div>

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Moments" %>
+
+<h1>Moments</h1>
+
+<div id="moments">
+  <% @moments.each do |moment| %>
+    <%= render moment %>
+    <p>
+      <%= link_to "Show this moment", moment %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New moment", new_moment_path %>

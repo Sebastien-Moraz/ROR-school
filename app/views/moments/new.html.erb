@@ -1,0 +1,11 @@
+<% content_for :title, "New moment" %>
+
+<h1>New moment</h1>
+
+<%= render "form", moment: @moment %>
+
+<br>
+
+<div>
+  <%= link_to "Back to moments", moments_path %>
+</div>

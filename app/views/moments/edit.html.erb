@@ -1,0 +1,12 @@
+<% content_for :title, "Editing moment" %>
+
+<h1>Editing moment</h1>
+
+<%= render "form", moment: @moment %>
+
+<br>
+
+<div>
+  <%= link_to "Show this moment", @moment %> |
+  <%= link_to "Back to moments", moments_path %>
+</div>
