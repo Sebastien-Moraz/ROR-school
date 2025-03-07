@@ -23,17 +23,17 @@
 
   <div>
     <%= form.label :person_id, style: "display: block" %>
-    <%= form.text_field :person_id %>
+    <%= form.collection_select :person_id, Person.where(role: :teacher), :id, :username, { prompt: "Sélectionnez un responsable" } %>
   </div>
 
   <div>
     <%= form.label :room_id, style: "display: block" %>
-    <%= form.text_field :room_id %>
+    <%= form.collection_select :room_id, Room.all, :id, :name, { prompt: "Sélectionnez une salle" } %>
   </div>
 
   <div>
     <%= form.label :moment_id, style: "display: block" %>
-    <%= form.text_field :moment_id %>
+    <%= form.collection_select :moment_id, Moment.all, :id, :uid, { prompt: "Sélectionnez un moment" } %>
   </div>
 
   <div>

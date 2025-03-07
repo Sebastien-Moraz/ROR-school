@@ -23,27 +23,27 @@
 
   <div>
     <%= form.label :week_day, style: "display: block" %>
-    <%= form.number_field :week_day %>
+    <%= form.select :week_day, Course.week_days.keys.map { |day| [day.humanize, day] } %>
   </div>
 
   <div>
     <%= form.label :classe_id, style: "display: block" %>
-    <%= form.text_field :classe_id %>
+    <%= form.collection_select :classe_id, SchoolClass.all, :id, :name, { prompt: "Sélectionnez une classe" } %>
   </div>
 
   <div>
     <%= form.label :subject_id, style: "display: block" %>
-    <%= form.text_field :subject_id %>
+    <%= form.collection_select :subject_id, Subject.all, :id, :name, { prompt: "Sélectionnez une matière" } %>
   </div>
 
   <div>
     <%= form.label :moment_id, style: "display: block" %>
-    <%= form.text_field :moment_id %>
+    <%= form.collection_select :moment_id, Moment.all, :id, :uid, { prompt: "Sélectionnez un moment" } %>
   </div>
 
   <div>
     <%= form.label :person_id, style: "display: block" %>
-    <%= form.text_field :person_id %>
+    <%= form.collection_select :person_id, Person.where(role: :teacher), :id, :username, { prompt: "Sélectionnez un enseignant" } %>
   </div>
 
   <div>

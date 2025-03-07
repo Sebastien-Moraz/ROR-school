@@ -26,7 +26,7 @@
 
   <p>
     <strong>Role:</strong>
-    <%= person.role %>
+    <%= person.role.humanize if person.role.present? %>
   </p>
 
   <p>
@@ -36,7 +36,7 @@
 
   <p>
     <strong>Address:</strong>
-    <%= person.address_id %>
+    <%= person.address.full_address if person.address.present? %>
   </p>
 
 </div>

@@ -38,7 +38,7 @@
 
   <div>
     <%= form.label :role, style: "display: block" %>
-    <%= form.number_field :role %>
+    <%= form.select :role, Person.roles.keys.map { |role| [role.humanize, role] } %>
   </div>
 
   <div>
@@ -48,7 +48,7 @@
 
   <div>
     <%= form.label :address_id, style: "display: block" %>
-    <%= form.text_field :address_id %>
+    <%= form.collection_select :address_id, Address.all, :id, :full_address, { prompt: "Sélectionnez une adresse" } %>
   </div>
 
   <div>

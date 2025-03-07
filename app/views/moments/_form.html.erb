@@ -18,7 +18,7 @@
 
   <div>
     <%= form.label :category, style: "display: block" %>
-    <%= form.number_field :category %>
+    <%= form.select :category, Moment.categories.keys.map { |category| [category.humanize, category] } %>
   </div>
 
   <div>
