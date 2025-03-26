@@ -20,19 +20,31 @@ Subject.destroy_all
 Moment.destroy_all
 Address.destroy_all
 
-puts "Création des moments de la journée..."
+puts "Création des périodes (trimestres)..."
 moments = {
-  morning: Moment.create!(
-    uid: "morning",
-    category: :morning,
-    start_at: Time.zone.now.change(hour: 8, min: 15),
-    end_at: Time.zone.now.change(hour: 11, min: 45)
+  trimestre1: Moment.create!(
+    uid: "T1",
+    category: :trimester_1,
+    start_at: Time.zone.now.beginning_of_year.change(month: 9),  # Septembre
+    end_at: Time.zone.now.beginning_of_year.change(month: 12, day: 20)  # Décembre
   ),
-  afternoon: Moment.create!(
-    uid: "afternoon",
-    category: :afternoon,
-    start_at: Time.zone.now.change(hour: 13, min: 15),
-    end_at: Time.zone.now.change(hour: 16, min: 45)
+  trimestre2: Moment.create!(
+    uid: "T2",
+    category: :trimester_2,
+    start_at: Time.zone.now.beginning_of_year.change(month: 1),  # Janvier
+    end_at: Time.zone.now.beginning_of_year.change(month: 3, day: 31)  # Mars
+  ),
+  trimestre3: Moment.create!(
+    uid: "T3",
+    category: :trimester_3,
+    start_at: Time.zone.now.beginning_of_year.change(month: 4),  # Avril
+    end_at: Time.zone.now.beginning_of_year.change(month: 6, day: 30)  # Juin
+  ),
+  trimestre4: Moment.create!(
+    uid: "T4",
+    category: :trimester_4,
+    start_at: Time.zone.now.beginning_of_year.change(month: 7),  # Juillet
+    end_at: Time.zone.now.beginning_of_year.change(month: 8, day: 31)  # Août
   )
 }
 
@@ -132,7 +144,7 @@ class_1a = SchoolClass.create!(
   uid: '1A-2024',
   person: prof_math,
   room: rooms[0],
-  moment: moments[:morning]
+  moment: moments[:trimestre1]  # Assigné au premier trimestre
 )
 students.each { |student| class_1a.students << student }
 
@@ -143,7 +155,7 @@ courses = [
     subject: subjects[0],
     person: prof_math,
     week_day: :monday,
-    moment: moments[:morning],
+    moment: moments[:trimestre1],  # Premier trimestre
     start_at: Time.zone.now.change(hour: 8, min: 15),
     end_at: Time.zone.now.change(hour: 11, min: 45)
   ),
@@ -152,7 +164,7 @@ courses = [
     subject: subjects[1],
     person: prof_info,
     week_day: :tuesday,
-    moment: moments[:afternoon],
+    moment: moments[:trimestre1],  # Premier trimestre
     start_at: Time.zone.now.change(hour: 13, min: 15),
     end_at: Time.zone.now.change(hour: 16, min: 45)
   )
