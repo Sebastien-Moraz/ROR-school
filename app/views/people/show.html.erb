@@ -1,10 +1,88 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Détails de #{@person.firstname} #{@person.lastname}" %>
 
-<%= render @person %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Détails de l'utilisateur</h1>
+    <div>
+      <%= link_to edit_person_path(@person), class: "btn btn-primary me-2" do %>
+        <i class="bi bi-pencil"></i> Modifier
+      <% end %>
+      <%= link_to people_path, class: "btn btn-secondary" do %>
+        <i class="bi bi-arrow-left"></i> Retour
+      <% end %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this person", edit_person_path(@person) %> |
-  <%= link_to "Back to people", people_path %>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
 
-  <%= button_to "Destroy this person", @person, method: :delete %>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h3 class="card-title mb-4">Informations personnelles</h3>
+          
+          <div class="mb-3">
+            <strong>Nom d'utilisateur :</strong>
+            <p class="text-muted mb-0"><%= @person.username %></p>
+          </div>
+
+          <div class="mb-3">
+            <strong>Nom complet :</strong>
+            <p class="text-muted mb-0"><%= "#{@person.firstname} #{@person.lastname}" %></p>
+          </div>
+
+          <div class="mb-3">
+            <strong>Email :</strong>
+            <p class="text-muted mb-0"><%= @person.email %></p>
+          </div>
+
+          <div class="mb-3">
+            <strong>Téléphone :</strong>
+            <p class="text-muted mb-0"><%= @person.phone_number %></p>
+          </div>
+
+          <div class="mb-3">
+            <strong>Rôle :</strong>
+            <p class="mb-0">
+              <span class="badge <%= @person.role == 'admin' ? 'bg-danger' : (@person.role == 'teacher' ? 'bg-primary' : 'bg-success') %>">
+                <%= @person.role.humanize %>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <h3 class="card-title mb-4">Informations complémentaires</h3>
+
+          <% if @person.iban.present? %>
+            <div class="mb-3">
+              <strong>IBAN :</strong>
+              <p class="text-muted mb-0"><%= @person.iban %></p>
+            </div>
+          <% end %>
+
+          <% if @person.address.present? %>
+            <div class="mb-3">
+              <strong>Adresse :</strong>
+              <p class="text-muted mb-0"><%= @person.address.full_address %></p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-end">
+    <%= button_to person_path(@person), 
+                  method: :delete, 
+                  class: "btn btn-danger", 
+                  form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" } } do %>
+      <i class="bi bi-trash"></i> Supprimer cet utilisateur
+    <% end %>
+  </div>
 </div>

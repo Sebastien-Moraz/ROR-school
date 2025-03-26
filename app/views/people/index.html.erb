@@ -1,16 +1,70 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Gestion des personnes" %>
 
-<% content_for :title, "People" %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des personnes</h1>
+    <%= link_to new_person_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Nouvelle personne</span>
+    <% end %>
+  </div>
 
-<h1>People</h1>
-
-<div id="people">
-  <% @people.each do |person| %>
-    <%= render person %>
-    <p>
-      <%= link_to "Show this person", person %>
-    </p>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New person", new_person_path %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Nom d'utilisateur</th>
+          <th>Nom complet</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Rôle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @people.each do |person| %>
+          <tr>
+            <td><%= person.username %></td>
+            <td><%= "#{person.firstname} #{person.lastname}" %></td>
+            <td><%= person.email %></td>
+            <td><%= person.phone_number %></td>
+            <td>
+              <span class="badge <%= person.role == 'admin' ? 'bg-danger' : (person.role == 'teacher' ? 'bg-primary' : 'bg-success') %>">
+                <%= person.role.humanize %>
+              </span>
+            </td>
+            <td>
+              <div class="d-flex gap-2 justify-content-end">
+                <%= link_to person, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
+
+                <%= link_to edit_person_path(person), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                  <i class="bi bi-pencil-fill text-white"></i>
+                <% end %>
+
+                <%= button_to person_path(person), 
+                    method: :delete, 
+                    class: "btn btn-sm btn-danger", 
+                    title: "Supprimer",
+                    form: { 
+                      class: "d-inline-block",
+                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer #{person.firstname} #{person.lastname} ?" } 
+                    } do %>
+                  <i class="bi bi-trash-fill"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
