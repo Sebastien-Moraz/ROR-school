@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  before_action :authenticate_person!
+  before_action :require_admin, except: [:edit_profile, :update_profile]
   before_action :set_person, only: %i[ show edit update destroy ]
 
   # GET /people or /people.json
@@ -57,14 +59,57 @@ class PeopleController < ApplicationController
     end
   end
 
+  def edit_profile
+    @person = current_person
+  end
+
+  def update_profile
+    @person = current_person
+    if @person.update(profile_params)
+      bypass_sign_in(@person)
+      redirect_to root_path, notice: 'Profil mis à jour avec succès.'
+    else
+      render :edit_profile
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_person
       @person = Person.find(params.require(:id))
     end
 
+    def require_admin
+      unless current_person&.role == 'admin'
+        flash[:error] = "Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs."
+        redirect_to root_path
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def person_params
-      params.require(:person).permit(:username, :firstname, :lastname, :email, :phone_number, :role, :iban, :address_id)
+      permitted_params = [:username, :firstname, :lastname, :email, :phone_number, :role, :iban]
+      
+      if params[:person][:address_attributes].present?
+        permitted_params << { address_attributes: [:zip, :town, :street, :number] }
+      else
+        permitted_params << :address_id
+      end
+
+      params.require(:person).permit(permitted_params)
+    end
+
+    def profile_params
+      params.require(:person).permit(
+        :username, 
+        :firstname, 
+        :lastname, 
+        :email, 
+        :phone_number, 
+        :password,
+        :password_confirmation,
+        :current_password,
+        address_attributes: [:id, :zip, :town, :street, :number]
+      )
     end
 end

@@ -62,17 +62,14 @@
                   <%= current_person.username %>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><%= link_to "Mon profil", edit_person_registration_path, class: "dropdown-item" %></li>
+                  <li><%= link_to "Mon profil", edit_profile_people_path, class: "dropdown-item" %></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><%= button_to "Se déconnecter", destroy_person_session_path, method: :delete, class: "dropdown-item" %></li>
+                  <li><%= button_to "Se déconnecter", destroy_person_session_path, method: :delete, class: "dropdown-item", form_class: "mb-0" %></li>
                 </ul>
               </li>
             <% else %>
               <li class="nav-item">
                 <%= link_to "Se connecter", new_person_session_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "S'inscrire", new_person_registration_path, class: "nav-link" %>
               </li>
             <% end %>
           </ul>

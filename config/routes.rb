@@ -8,7 +8,10 @@ Rails.application.routes.draw do
   resources :moments
   resources :rooms
   devise_for :people
-  resources :people
+  resources :people do
+    get 'profile/edit', to: 'people#edit_profile', as: :edit_profile, on: :collection
+    patch 'profile/update', to: 'people#update_profile', as: :update_profile, on: :collection
+  end
   resources :addresses
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

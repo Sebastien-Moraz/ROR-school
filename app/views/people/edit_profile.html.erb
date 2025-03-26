@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <h2>Modifier mon profil</h2>
+
+  <%= form_for(@person, url: update_profile_people_path, html: { method: :patch }) do |f| %>
+    <% if @person.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@person.errors.count, "erreur") %> ont empêché la sauvegarde :</h4>
+        <ul>
+          <% @person.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <%= f.label :username, "Nom d'utilisateur", class: "form-label" %>
+          <%= f.text_field :username, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :firstname, "Prénom", class: "form-label" %>
+          <%= f.text_field :firstname, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :lastname, "Nom", class: "form-label" %>
+          <%= f.text_field :lastname, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :email, "Email", class: "form-label" %>
+          <%= f.email_field :email, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :phone_number, "Numéro de téléphone", class: "form-label" %>
+          <%= f.text_field :phone_number, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <%= f.fields_for :address do |address_form| %>
+          <div class="mb-3">
+            <%= address_form.label :street, "Rue", class: "form-label" %>
+            <%= address_form.text_field :street, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= address_form.label :number, "Numéro", class: "form-label" %>
+            <%= address_form.text_field :number, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= address_form.label :zip, "Code postal", class: "form-label" %>
+            <%= address_form.text_field :zip, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= address_form.label :town, "Ville", class: "form-label" %>
+            <%= address_form.text_field :town, class: "form-control" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h4>Changer le mot de passe</h4>
+        <p class="text-muted">Laissez vide si vous ne souhaitez pas le modifier</p>
+
+        <div class="mb-3">
+          <%= f.label :password, "Nouveau mot de passe", class: "form-label" %>
+          <%= f.password_field :password, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password_confirmation, "Confirmation du nouveau mot de passe", class: "form-label" %>
+          <%= f.password_field :password_confirmation, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :current_password, "Mot de passe actuel", class: "form-label" %>
+          <%= f.password_field :current_password, class: "form-control" %>
+          <div class="form-text">Nous avons besoin de votre mot de passe actuel pour confirmer vos modifications</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <%= f.submit "Mettre à jour", class: "btn btn-primary" %>
+      <%= link_to "Retour", root_path, class: "btn btn-secondary ms-2" %>
+    </div>
+  <% end %>
+</div> 

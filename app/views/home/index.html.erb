@@ -7,8 +7,8 @@
     <% if person_signed_in? %>
       <p>Vous êtes connecté en tant que <%= current_person.username %> (<%= current_person.role.humanize %>)</p>
       <div class="mt-3">
-        <%= link_to "Mon profil", edit_person_registration_path, class: "btn btn-primary" %>
-        <%= link_to "Se déconnecter", destroy_person_session_path, method: :delete, class: "btn btn-danger" %>
+        <%= link_to "Mon profil", edit_profile_people_path, class: "btn btn-primary" %>
+        <%= button_to "Se déconnecter", destroy_person_session_path, method: :delete, class: "btn btn-danger", form_class: "d-inline" %>
       </div>
       
       <div class="mt-4">
@@ -22,10 +22,9 @@
         </div>
       </div>
     <% else %>
-      <p>Veuillez vous connecter ou vous inscrire pour accéder à l'application.</p>
+      <p>Veuillez vous connecter pour accéder à l'application.</p>
       <div class="mt-3">
         <%= link_to "Se connecter", new_person_session_path, class: "btn btn-primary" %>
-        <%= link_to "S'inscrire", new_person_registration_path, class: "btn btn-success" %>
       </div>
     <% end %>
   </div>
