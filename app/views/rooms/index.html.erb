@@ -21,7 +21,6 @@
       <thead class="table-light">
         <tr>
           <th>Nom</th>
-          <th>Capacité</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -29,7 +28,6 @@
         <% @rooms.each do |room| %>
           <tr>
             <td><%= room.name %></td>
-            <td><%= room.capacity %> personnes</td>
             <td>
               <div class="d-flex gap-2 justify-content-end">
                 <%= link_to room, class: "btn btn-sm btn-primary", title: "Voir" do %>

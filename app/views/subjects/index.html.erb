@@ -21,7 +21,6 @@
       <thead class="table-light">
         <tr>
           <th>Nom</th>
-          <th>Description</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -29,7 +28,6 @@
         <% @subjects.each do |subject| %>
           <tr>
             <td><%= subject.name %></td>
-            <td><%= subject.description %></td>
             <td>
               <div class="d-flex gap-2 justify-content-end">
                 <%= link_to subject, class: "btn btn-sm btn-primary", title: "Voir" do %>

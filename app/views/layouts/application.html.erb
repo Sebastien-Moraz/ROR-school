@@ -53,6 +53,14 @@
                 <li class="nav-item">
                   <%= link_to "Examens", examinations_path, class: "nav-link" %>
                 </li>
+                <% if current_person.admin? %>
+                  <li class="nav-item">
+                    <%= link_to "Salles", rooms_path, class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link_to "Matières", subjects_path, class: "nav-link" %>
+                  </li>
+                <% end %>
               <% end %>
               <% if current_person.student? %>
                 <li class="nav-item">
