@@ -1,16 +1,66 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Gestion des cours" %>
 
-<% content_for :title, "Courses" %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des cours</h1>
+    <%= link_to new_course_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Nouveau cours</span>
+    <% end %>
+  </div>
 
-<h1>Courses</h1>
-
-<div id="courses">
-  <% @courses.each do |course| %>
-    <%= render course %>
-    <p>
-      <%= link_to "Show this course", course %>
-    </p>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New course", new_course_path %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Matière</th>
+          <th>Classe</th>
+          <th>Professeur</th>
+          <th>Jour</th>
+          <th>Horaire</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @courses.each do |course| %>
+          <tr>
+            <td><%= course.subject.name if course.subject.present? %></td>
+            <td><%= course.classe.name if course.classe.present? %></td>
+            <td><%= "#{course.person.firstname} #{course.person.lastname}" if course.person.present? %></td>
+            <td><%= course.week_day %></td>
+            <td><%= "#{course.start_at.strftime('%H:%M')} - #{course.end_at.strftime('%H:%M')}" %></td>
+            <td>
+              <div class="d-flex gap-2 justify-content-end">
+                <%= link_to course, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
+
+                <%= link_to edit_course_path(course), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                  <i class="bi bi-pencil-fill text-white"></i>
+                <% end %>
+
+                <%= button_to course_path(course), 
+                    method: :delete, 
+                    class: "btn btn-sm btn-danger", 
+                    title: "Supprimer",
+                    form: { 
+                      class: "d-inline-block",
+                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce cours ?" } 
+                    } do %>
+                  <i class="bi bi-trash-fill"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,16 +1,66 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Gestion des classes" %>
 
-<% content_for :title, "School classes" %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des classes</h1>
+    <%= link_to new_school_class_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Nouvelle classe</span>
+    <% end %>
+  </div>
 
-<h1>School classes</h1>
-
-<div id="school_classes">
-  <% @school_classes.each do |school_class| %>
-    <%= render school_class %>
-    <p>
-      <%= link_to "Show this school class", school_class %>
-    </p>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New school class", new_school_class_path %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Identifiant</th>
+          <th>Nom</th>
+          <th>Professeur principal</th>
+          <th>Salle</th>
+          <th>Période</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @school_classes.each do |school_class| %>
+          <tr>
+            <td><%= school_class.uid %></td>
+            <td><%= school_class.name %></td>
+            <td><%= "#{school_class.person.firstname} #{school_class.person.lastname}" if school_class.person.present? %></td>
+            <td><%= school_class.room.name if school_class.room.present? %></td>
+            <td><%= school_class.moment.uid if school_class.moment.present? %></td>
+            <td>
+              <div class="d-flex gap-2 justify-content-end">
+                <%= link_to school_class, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
+
+                <%= link_to edit_school_class_path(school_class), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                  <i class="bi bi-pencil-fill text-white"></i>
+                <% end %>
+
+                <%= button_to school_class_path(school_class), 
+                    method: :delete, 
+                    class: "btn btn-sm btn-danger", 
+                    title: "Supprimer",
+                    form: { 
+                      class: "d-inline-block",
+                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer la classe #{school_class.name} ?" } 
+                    } do %>
+                  <i class="bi bi-trash-fill"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

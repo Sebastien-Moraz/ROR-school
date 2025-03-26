@@ -1,16 +1,70 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Gestion des examens" %>
 
-<% content_for :title, "Examinations" %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des examens</h1>
+    <%= link_to new_examination_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Nouvel examen</span>
+    <% end %>
+  </div>
 
-<h1>Examinations</h1>
-
-<div id="examinations">
-  <% @examinations.each do |examination| %>
-    <%= render examination %>
-    <p>
-      <%= link_to "Show this examination", examination %>
-    </p>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New examination", new_examination_path %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Titre</th>
+          <th>Cours</th>
+          <th>Matière</th>
+          <th>Classe</th>
+          <th>Date prévue</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @examinations.each do |examination| %>
+          <tr>
+            <td><%= examination.title %></td>
+            <td>
+              <% if examination.course.present? %>
+                <%= "#{examination.course.subject.name} - #{examination.course.classe.name}" %>
+              <% end %>
+            </td>
+            <td><%= examination.course.subject.name if examination.course&.subject.present? %></td>
+            <td><%= examination.course.classe.name if examination.course&.classe.present? %></td>
+            <td><%= examination.expected_at.strftime("%d/%m/%Y") if examination.expected_at.present? %></td>
+            <td>
+              <div class="d-flex gap-2 justify-content-end">
+                <%= link_to examination, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                  <i class="bi bi-eye-fill"></i>
+                <% end %>
+
+                <%= link_to edit_examination_path(examination), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                  <i class="bi bi-pencil-fill text-white"></i>
+                <% end %>
+
+                <%= button_to examination_path(examination), 
+                    method: :delete, 
+                    class: "btn btn-sm btn-danger", 
+                    title: "Supprimer",
+                    form: { 
+                      class: "d-inline-block",
+                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer l'examen #{examination.title} ?" } 
+                    } do %>
+                  <i class="bi bi-trash-fill"></i>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
