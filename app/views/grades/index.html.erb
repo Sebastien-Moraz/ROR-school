@@ -1,11 +1,13 @@
-<% content_for :title, "Gestion des notes" %>
+<% content_for :title, current_person.student? ? "Mon bulletin de notes" : "Gestion des notes" %>
 
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Gestion des notes</h1>
-    <%= link_to new_grade_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
-      <i class="bi bi-plus-circle-fill"></i>
-      <span>Nouvelle note</span>
+    <h1><%= current_person.student? ? "Mon bulletin de notes" : "Gestion des notes" %></h1>
+    <% if current_person.admin? || current_person.teacher? %>
+      <%= link_to new_grade_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>Nouvelle note</span>
+      <% end %>
     <% end %>
   </div>
 
@@ -16,60 +18,97 @@
     </div>
   <% end %>
 
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead class="table-light">
-        <tr>
-          <th>Étudiant</th>
-          <th>Examen</th>
-          <th>Note</th>
-          <th>Date prévue</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @grades.each do |grade| %>
+  <% if @grades.any? %>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
           <tr>
-            <td><%= "#{grade.person.firstname} #{grade.person.lastname}" if grade.person.present? %></td>
-            <td>
-              <% if grade.examination.present? %>
-                <%= grade.examination.title %>
-                <div class="text-muted small">
-                  <%= "#{grade.examination.course.subject.name} - #{grade.examination.course.classe.name}" if grade.examination.course.present? %>
-                </div>
-              <% end %>
-            </td>
-            <td>
-              <span class="badge <%= grade.value >= 10 ? 'bg-success' : 'bg-danger' %>">
-                <%= grade.value %>/20
-              </span>
-            </td>
-            <td><%= grade.expected_at.strftime("%d/%m/%Y") if grade.expected_at.present? %></td>
-            <td>
-              <div class="d-flex gap-2 justify-content-end">
-                <%= link_to grade, class: "btn btn-sm btn-primary", title: "Voir" do %>
-                  <i class="bi bi-eye-fill"></i>
-                <% end %>
-
-                <%= link_to edit_grade_path(grade), class: "btn btn-sm btn-warning", title: "Modifier" do %>
-                  <i class="bi bi-pencil-fill text-white"></i>
-                <% end %>
-
-                <%= button_to grade_path(grade), 
-                    method: :delete, 
-                    class: "btn btn-sm btn-danger", 
-                    title: "Supprimer",
-                    form: { 
-                      class: "d-inline-block",
-                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } 
-                    } do %>
-                  <i class="bi bi-trash-fill"></i>
-                <% end %>
-              </div>
-            </td>
+            <% unless current_person.student? %>
+              <th>Étudiant</th>
+            <% end %>
+            <th>Matière</th>
+            <th>Classe</th>
+            <th>Examen</th>
+            <th>Note</th>
+            <th>Date</th>
+            <% if current_person.admin? || current_person.teacher? %>
+              <th>Actions</th>
+            <% end %>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          <% @grades.each do |grade| %>
+            <tr>
+              <% unless current_person.student? %>
+                <td><%= "#{grade.person.firstname} #{grade.person.lastname}" if grade.person.present? %></td>
+              <% end %>
+              <td>
+                <% if grade.examination&.course&.subject.present? %>
+                  <%= grade.examination.course.subject.name %>
+                <% end %>
+              </td>
+              <td>
+                <% if grade.examination&.course&.classe.present? %>
+                  <%= grade.examination.course.classe.name %>
+                <% end %>
+              </td>
+              <td>
+                <% if grade.examination.present? %>
+                  <%= grade.examination.title %>
+                <% end %>
+              </td>
+              <td>
+                <span class="badge <%= grade.value >= 10 ? 'bg-success' : 'bg-danger' %>">
+                  <%= grade.value %>/20
+                </span>
+              </td>
+              <td><%= grade.expected_at.strftime("%d/%m/%Y") if grade.expected_at.present? %></td>
+              <% if current_person.admin? || current_person.teacher? %>
+                <td>
+                  <div class="d-flex gap-2 justify-content-end">
+                    <%= link_to grade, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                      <i class="bi bi-eye-fill"></i>
+                    <% end %>
+
+                    <%= link_to edit_grade_path(grade), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                      <i class="bi bi-pencil-fill text-white"></i>
+                    <% end %>
+
+                    <%= button_to grade_path(grade), 
+                        method: :delete, 
+                        class: "btn btn-sm btn-danger", 
+                        title: "Supprimer",
+                        form: { 
+                          class: "d-inline-block",
+                          data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } 
+                        } do %>
+                      <i class="bi bi-trash-fill"></i>
+                    <% end %>
+                  </div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if current_person.student? %>
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title">Moyenne générale</h5>
+          <% average = @grades.average(:value).to_f.round(2) %>
+          <p class="card-text">
+            <span class="badge <%= average >= 10 ? 'bg-success' : 'bg-danger' %> fs-5">
+              <%= average %>/20
+            </span>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-info">
+      <%= current_person.student? ? "Vous n'avez pas encore de notes." : "Aucune note n'a été enregistrée." %>
+    </div>
+  <% end %>
 </div>

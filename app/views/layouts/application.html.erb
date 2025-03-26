@@ -40,21 +40,29 @@
               <%= link_to "Accueil", root_path, class: "nav-link" %>
             </li>
             <% if person_signed_in? %>
-              <li class="nav-item">
-                <%= link_to "Personnes", people_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Classes", school_classes_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Cours", courses_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Examens", examinations_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Notes", grades_path, class: "nav-link" %>
-              </li>
+              <% if current_person.admin? || current_person.teacher? %>
+                <li class="nav-item">
+                  <%= link_to "Personnes", people_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Classes", school_classes_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Cours", courses_path, class: "nav-link" %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "Examens", examinations_path, class: "nav-link" %>
+                </li>
+              <% end %>
+              <% if current_person.student? %>
+                <li class="nav-item">
+                  <%= link_to "Mes notes", grades_path, class: "nav-link" %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to "Notes", grades_path, class: "nav-link" %>
+                </li>
+              <% end %>
             <% end %>
           </ul>
           <ul class="navbar-nav">
