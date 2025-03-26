@@ -1,13 +1,11 @@
-<% content_for :title, current_person.student? ? "Mon bulletin de notes" : "Gestion des notes" %>
+<% content_for :title, "Gestion des notes" %>
 
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><%= current_person.student? ? "Mon bulletin de notes" : "Gestion des notes" %></h1>
-    <% if current_person.admin? || current_person.teacher? %>
-      <%= link_to new_grade_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
-        <i class="bi bi-plus-circle-fill"></i>
-        <span>Nouvelle note</span>
-      <% end %>
+    <h1>Gestion des notes</h1>
+    <%= link_to new_grade_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Nouvelle note</span>
     <% end %>
   </div>
 
@@ -23,70 +21,42 @@
       <table class="table table-hover">
         <thead class="table-light">
           <tr>
-            <% unless current_person.student? %>
-              <th>Étudiant</th>
-            <% end %>
-            <th>Matière</th>
-            <th>Classe</th>
+            <th>Valeur</th>
+            <th>Étudiant</th>
             <th>Examen</th>
-            <th>Note</th>
             <th>Date</th>
-            <% if current_person.admin? || current_person.teacher? %>
-              <th>Actions</th>
-            <% end %>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <% @grades.each do |grade| %>
             <tr>
-              <% unless current_person.student? %>
-                <td><%= "#{grade.person.firstname} #{grade.person.lastname}" if grade.person.present? %></td>
-              <% end %>
+              <td><%= grade.value %>/20</td>
+              <td><%= "#{grade.person.firstname} #{grade.person.lastname}" if grade.person.present? %></td>
+              <td><%= grade.examination.title if grade.examination.present? %></td>
+              <td><%= l(grade.expected_at, format: :long) if grade.expected_at.present? %></td>
               <td>
-                <% if grade.examination&.course&.subject.present? %>
-                  <%= grade.examination.course.subject.name %>
-                <% end %>
-              </td>
-              <td>
-                <% if grade.examination&.course&.classe.present? %>
-                  <%= grade.examination.course.classe.name %>
-                <% end %>
-              </td>
-              <td>
-                <% if grade.examination.present? %>
-                  <%= grade.examination.title %>
-                <% end %>
-              </td>
-              <td>
-                <span class="badge <%= grade.value >= 10 ? 'bg-success' : 'bg-danger' %>">
-                  <%= grade.value %>/20
-                </span>
-              </td>
-              <td><%= grade.expected_at.strftime("%d/%m/%Y") if grade.expected_at.present? %></td>
-              <% if current_person.admin? || current_person.teacher? %>
-                <td>
-                  <div class="d-flex gap-2 justify-content-end">
-                    <%= link_to grade, class: "btn btn-sm btn-primary", title: "Voir" do %>
-                      <i class="bi bi-eye-fill"></i>
-                    <% end %>
+                <div class="d-flex gap-2 justify-content-end">
+                  <%= link_to grade, class: "btn btn-sm btn-primary", title: "Voir" do %>
+                    <i class="bi bi-eye-fill"></i>
+                  <% end %>
 
-                    <%= link_to edit_grade_path(grade), class: "btn btn-sm btn-warning", title: "Modifier" do %>
-                      <i class="bi bi-pencil-fill text-white"></i>
-                    <% end %>
+                  <%= link_to edit_grade_path(grade), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                    <i class="bi bi-pencil-fill text-white"></i>
+                  <% end %>
 
-                    <%= button_to grade_path(grade), 
-                        method: :delete, 
-                        class: "btn btn-sm btn-danger", 
-                        title: "Supprimer",
-                        form: { 
-                          class: "d-inline-block",
-                          data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } 
-                        } do %>
-                      <i class="bi bi-trash-fill"></i>
-                    <% end %>
-                  </div>
-                </td>
-              <% end %>
+                  <%= button_to grade_path(grade), 
+                      method: :delete, 
+                      class: "btn btn-sm btn-danger", 
+                      title: "Supprimer",
+                      form: { 
+                        class: "d-inline-block",
+                        data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } 
+                      } do %>
+                    <i class="bi bi-trash-fill"></i>
+                  <% end %>
+                </div>
+              </td>
             </tr>
           <% end %>
         </tbody>

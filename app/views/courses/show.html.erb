@@ -1,10 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Détails du cours" %>
 
-<%= render @course %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Détails du cours</h1>
+    <div class="btn-group">
+      <%= link_to "Modifier", edit_course_path(@course), class: "btn btn-warning" %>
+      <%= link_to "Retour", courses_path, class: "btn btn-secondary" %>
+      <%= button_to "Supprimer", @course, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce cours ?" } } %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this course", edit_course_path(@course) %> |
-  <%= link_to "Back to courses", courses_path %>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
 
-  <%= button_to "Destroy this course", @course, method: :delete %>
+  <%= render @course %>
 </div>

@@ -1,27 +1,105 @@
-<div id="<%= dom_id school_class %>">
-  <p>
-    <strong>Uid:</strong>
-    <%= school_class.uid %>
-  </p>
+<div id="<%= dom_id school_class %>" class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Informations générales</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="fw-bold">Identifiant :</label>
+          <p class="mb-0"><%= school_class.uid %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Nom :</label>
+          <p class="mb-0"><%= school_class.name %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Responsable :</label>
+          <p class="mb-0">
+            <% if school_class.person.present? %>
+              <%= "#{school_class.person.firstname} #{school_class.person.lastname}" %>
+            <% else %>
+              <span class="text-muted">Non assigné</span>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>
-    <strong>Name:</strong>
-    <%= school_class.name %>
-  </p>
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Localisation et horaires</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="fw-bold">Salle :</label>
+          <p class="mb-0">
+            <% if school_class.room.present? %>
+              <%= school_class.room.name %>
+            <% else %>
+              <span class="text-muted">Non assignée</span>
+            <% end %>
+          </p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Période :</label>
+          <p class="mb-0">
+            <% if school_class.moment.present? %>
+              <%= school_class.moment.uid %>
+              <small class="text-muted">
+                (<%= school_class.moment.start_at.strftime("%H:%M") %> - <%= school_class.moment.end_at.strftime("%H:%M") %>)
+              </small>
+            <% else %>
+              <span class="text-muted">Non assignée</span>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>
-    <strong>Person:</strong>
-    <%= school_class.person_id %>
-  </p>
-
-  <p>
-    <strong>Room:</strong>
-    <%= school_class.room_id %>
-  </p>
-
-  <p>
-    <strong>Moment:</strong>
-    <%= school_class.moment_id %>
-  </p>
-
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Étudiants inscrits</h5>
+      </div>
+      <div class="card-body">
+        <% if school_class.students.any? %>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prénom</th>
+                  <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% school_class.students.each do |student| %>
+                  <tr>
+                    <td><%= student.lastname %></td>
+                    <td><%= student.firstname %></td>
+                    <td><%= student.email %></td>
+                    <td><%= student.phone_number %></td>
+                    <td>
+                      <div class="btn-group btn-group-sm">
+                        <%= link_to "Voir", student, class: "btn btn-info" %>
+                        <%= link_to "Modifier", edit_person_path(student), class: "btn btn-warning" %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Aucun étudiant inscrit dans cette classe.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

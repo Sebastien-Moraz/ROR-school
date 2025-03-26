@@ -1,22 +1,59 @@
-<div id="<%= dom_id grade %>">
-  <p>
-    <strong>Value:</strong>
-    <%= grade.value %>
-  </p>
+<div id="<%= dom_id grade %>" class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Informations de la note</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="fw-bold">Note :</label>
+          <p class="mb-0"><%= grade.value %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Date prévue :</label>
+          <p class="mb-0"><%= grade.expected_at.strftime("%d/%m/%Y %H:%M") %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Étudiant :</label>
+          <p class="mb-0">
+            <% if grade.person.present? %>
+              <%= "#{grade.person.firstname} #{grade.person.lastname}" %>
+            <% else %>
+              <span class="text-muted">Non assigné</span>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>
-    <strong>Expected at:</strong>
-    <%= grade.expected_at %>
-  </p>
-
-  <p>
-    <strong>Examination:</strong>
-    <%= grade.examination_id %>
-  </p>
-
-  <p>
-    <strong>Person:</strong>
-    <%= grade.person_id %>
-  </p>
-
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Informations de l'examen</h5>
+      </div>
+      <div class="card-body">
+        <% if grade.examination.present? %>
+          <div class="mb-3">
+            <label class="fw-bold">Titre de l'examen :</label>
+            <p class="mb-0"><%= grade.examination.title %></p>
+          </div>
+          <div class="mb-3">
+            <label class="fw-bold">Cours :</label>
+            <p class="mb-0">
+              <%= "#{grade.examination.course.subject.name} - #{grade.examination.course.school_class.name}" %>
+            </p>
+          </div>
+          <div class="mb-3">
+            <label class="fw-bold">Enseignant :</label>
+            <p class="mb-0">
+              <%= "#{grade.examination.course.person.firstname} #{grade.examination.course.person.lastname}" %>
+            </p>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Aucun examen associé à cette note.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

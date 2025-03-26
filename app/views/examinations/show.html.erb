@@ -1,10 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Détails de l'examen" %>
 
-<%= render @examination %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Détails de l'examen</h1>
+    <div class="btn-group">
+      <%= link_to "Modifier", edit_examination_path(@examination), class: "btn btn-warning" %>
+      <%= link_to "Retour", examinations_path, class: "btn btn-secondary" %>
+      <%= button_to "Supprimer", @examination, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" } } %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this examination", edit_examination_path(@examination) %> |
-  <%= link_to "Back to examinations", examinations_path %>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
 
-  <%= button_to "Destroy this examination", @examination, method: :delete %>
+  <%= render @examination %>
 </div>

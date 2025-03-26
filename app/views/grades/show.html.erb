@@ -1,10 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Détails de la note" %>
 
-<%= render @grade %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Détails de la note</h1>
+    <div class="btn-group">
+      <%= link_to "Modifier", edit_grade_path(@grade), class: "btn btn-warning" %>
+      <%= link_to "Retour", grades_path, class: "btn btn-secondary" %>
+      <%= button_to "Supprimer", @grade, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } } %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this grade", edit_grade_path(@grade) %> |
-  <%= link_to "Back to grades", grades_path %>
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
 
-  <%= button_to "Destroy this grade", @grade, method: :delete %>
+  <%= render @grade %>
 </div>

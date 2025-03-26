@@ -1,17 +1,69 @@
-<div id="<%= dom_id examination %>">
-  <p>
-    <strong>Title:</strong>
-    <%= examination.title %>
-  </p>
+<div id="<%= dom_id examination %>" class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Informations générales</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="fw-bold">Titre :</label>
+          <p class="mb-0"><%= examination.title %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Date prévue :</label>
+          <p class="mb-0"><%= examination.expected_at.strftime("%d/%m/%Y %H:%M") %></p>
+        </div>
+        <div class="mb-3">
+          <label class="fw-bold">Cours :</label>
+          <p class="mb-0">
+            <% if examination.course.present? %>
+              <%= "#{examination.course.subject.name} - #{examination.course.school_class.name}" %>
+            <% else %>
+              <span class="text-muted">Non assigné</span>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p>
-    <strong>Expected at:</strong>
-    <%= examination.expected_at %>
-  </p>
-
-  <p>
-    <strong>Course:</strong>
-    <%= examination.course_id %>
-  </p>
-
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Notes des étudiants</h5>
+      </div>
+      <div class="card-body">
+        <% if examination.grades.any? %>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Étudiant</th>
+                  <th>Note</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% examination.grades.each do |grade| %>
+                  <tr>
+                    <td><%= "#{grade.person.firstname} #{grade.person.lastname}" %></td>
+                    <td><%= grade.value %></td>
+                    <td>
+                      <div class="btn-group btn-group-sm">
+                        <%= link_to "Voir", grade, class: "btn btn-info" %>
+                        <%= link_to "Modifier", edit_grade_path(grade), class: "btn btn-warning" %>
+                        <%= link_to "Supprimer", grade, class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Aucune note enregistrée pour cet examen.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

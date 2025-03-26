@@ -22,8 +22,6 @@
         <tr>
           <th>Titre</th>
           <th>Cours</th>
-          <th>Matière</th>
-          <th>Classe</th>
           <th>Date prévue</th>
           <th>Actions</th>
         </tr>
@@ -32,14 +30,8 @@
         <% @examinations.each do |examination| %>
           <tr>
             <td><%= examination.title %></td>
-            <td>
-              <% if examination.course.present? %>
-                <%= "#{examination.course.subject.name} - #{examination.course.classe.name}" %>
-              <% end %>
-            </td>
             <td><%= examination.course.subject.name if examination.course&.subject.present? %></td>
-            <td><%= examination.course.classe.name if examination.course&.classe.present? %></td>
-            <td><%= examination.expected_at.strftime("%d/%m/%Y") if examination.expected_at.present? %></td>
+            <td><%= l(examination.expected_at, format: :long) if examination.expected_at.present? %></td>
             <td>
               <div class="d-flex gap-2 justify-content-end">
                 <%= link_to examination, class: "btn btn-sm btn-primary", title: "Voir" do %>
@@ -56,7 +48,7 @@
                     title: "Supprimer",
                     form: { 
                       class: "d-inline-block",
-                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer l'examen #{examination.title} ?" } 
+                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" } 
                     } do %>
                   <i class="bi bi-trash-fill"></i>
                 <% end %>
