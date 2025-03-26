@@ -21,11 +21,19 @@ class GradesController < ApplicationController
   def new
     authorize_admin_or_teacher!
     @grade = Grade.new
+    @courses = Course.all.includes(:subject)
+  end
+
+  # GET /examinations_for_course
+  def examinations_for_course
+    @examinations = Course.find(params[:course_id]).examinations
+    render json: @examinations.map { |exam| { id: exam.id, name: exam.name } }
   end
 
   # GET /grades/1/edit
   def edit
     authorize_admin_or_teacher!
+    @courses = Course.all.includes(:subject)
   end
 
   # POST /grades or /grades.json

@@ -1,8 +1,7 @@
 <%= form_with(model: grade) do |form| %>
   <% if grade.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(grade.errors.count, "error") %> prohibited this grade from being saved:</h2>
-
+    <div class="alert alert-danger">
+      <h2><%= pluralize(grade.errors.count, "erreur") %> ont empêché la sauvegarde de cette note :</h2>
       <ul>
         <% grade.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,27 +10,33 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :value, style: "display: block" %>
-    <%= form.number_field :value %>
+  <div class="mb-3">
+    <%= form.label :examination_id, "Examen", class: "form-label" %>
+    <%= form.collection_select :examination_id,
+        Examination.all.includes(course: [:subject, :classe]),
+        :id,
+        ->(exam) { "#{exam.title} (#{exam.course.subject.name} - #{exam.course.classe.name})" },
+        { prompt: "Sélectionnez un examen" },
+        class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.label :expected_at, style: "display: block" %>
-    <%= form.datetime_field :expected_at %>
+  <div class="mb-3">
+    <%= form.label :person_id, "Étudiant", class: "form-label" %>
+    <%= form.collection_select :person_id, 
+        Person.where(role: 'student'), 
+        :id, 
+        ->(person) { "#{person.firstname} #{person.lastname}" },
+        { prompt: "Sélectionnez un étudiant" },
+        class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.label :examination_id, style: "display: block" %>
-    <%= form.text_field :examination_id %>
+  <div class="mb-3">
+    <%= form.label :value, "Note", class: "form-label" %>
+    <%= form.number_field :value, class: "form-control", step: "0.01", min: 0, max: 20 %>
   </div>
 
-  <div>
-    <%= form.label :person_id, style: "display: block" %>
-    <%= form.text_field :person_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Retour", grades_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>

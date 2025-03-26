@@ -65,11 +65,23 @@ class PeopleController < ApplicationController
 
   def update_profile
     @person = current_person
-    if @person.update(profile_params)
-      bypass_sign_in(@person)
-      redirect_to root_path, notice: 'Profil mis à jour avec succès.'
+    
+    if current_person.admin?
+      success = @person.update(profile_params_admin)
     else
-      render :edit_profile
+      if params[:person][:current_password].present?
+        success = @person.update_with_password(profile_params_user)
+      else
+        @person.errors.add(:current_password, "est nécessaire pour modifier votre mot de passe")
+        success = false
+      end
+    end
+
+    if success
+      bypass_sign_in(@person)
+      redirect_to root_path, notice: "Votre profil a été mis à jour avec succès."
+    else
+      render :edit_profile, status: :unprocessable_entity
     end
   end
 
@@ -102,17 +114,26 @@ class PeopleController < ApplicationController
       )
     end
 
-    def profile_params
+    def profile_params_admin
       params.require(:person).permit(
-        :username, 
-        :firstname, 
-        :lastname, 
-        :email, 
-        :phone_number, 
+        :username,
+        :firstname,
+        :lastname,
+        :email,
+        :phone_number,
+        :role,
+        :iban,
         :password,
         :password_confirmation,
-        :current_password,
         address_attributes: [:id, :zip, :town, :street, :number]
+      )
+    end
+
+    def profile_params_user
+      params.require(:person).permit(
+        :current_password,
+        :password,
+        :password_confirmation
       )
     end
 end

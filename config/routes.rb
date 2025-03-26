@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   get "home/index"
-  resources :grades
+  resources :grades do
+    collection do
+      get 'examinations_for_course/:course_id', to: 'grades#examinations_for_course', as: 'examinations_for_course'
+    end
+  end
   resources :examinations
   resources :courses
   resources :subjects

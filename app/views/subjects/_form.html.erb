@@ -1,8 +1,7 @@
 <%= form_with(model: subject) do |form| %>
   <% if subject.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(subject.errors.count, "error") %> prohibited this subject from being saved:</h2>
-
+    <div class="alert alert-danger">
+      <h2><%= pluralize(subject.errors.count, "erreur") %> ont empêché la sauvegarde de cette matière :</h2>
       <ul>
         <% subject.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,12 +10,20 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Informations de la matière</h5>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <%= form.label :name, "Nom de la matière", class: "form-label" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Ex: Mathématiques" %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Retour", subjects_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>

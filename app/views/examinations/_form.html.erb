@@ -1,7 +1,7 @@
 <%= form_with(model: examination) do |form| %>
   <% if examination.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(examination.errors.count, "error") %> prohibited this examination from being saved:</h2>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(examination.errors.count, "erreur") %> ont empêché la sauvegarde de cet examen :</h2>
 
       <ul>
         <% examination.errors.each do |error| %>
@@ -11,22 +11,28 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div class="mb-3">
+    <%= form.label :course_id, "Cours", class: "form-label" %>
+    <%= form.collection_select :course_id, 
+        Course.all.includes(:subject, :classe),
+        :id,
+        ->(course) { "#{course.subject.name} - #{course.classe.name}" },
+        { prompt: "Sélectionnez un cours" },
+        class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.label :expected_at, style: "display: block" %>
-    <%= form.datetime_field :expected_at %>
+  <div class="mb-3">
+    <%= form.label :title, "Nom de l'examen", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.label :course_id, style: "display: block" %>
-    <%= form.text_field :course_id %>
+  <div class="mb-3">
+    <%= form.label :expected_at, "Date prévue", class: "form-label" %>
+    <%= form.datetime_field :expected_at, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Retour", examinations_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>

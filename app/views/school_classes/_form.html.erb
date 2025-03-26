@@ -1,8 +1,7 @@
 <%= form_with(model: school_class) do |form| %>
   <% if school_class.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(school_class.errors.count, "error") %> prohibited this school_class from being saved:</h2>
-
+    <div class="alert alert-danger">
+      <h2><%= pluralize(school_class.errors.count, "erreur") %> ont empêché la sauvegarde de cette classe :</h2>
       <ul>
         <% school_class.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,32 +10,63 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :uid, style: "display: block" %>
-    <%= form.text_field :uid %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Informations de la classe</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= form.label :uid, "Code de la classe", class: "form-label" %>
+          <%= form.text_field :uid, class: "form-control" %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= form.label :name, "Nom de la classe", class: "form-label" %>
+          <%= form.text_field :name, class: "form-control" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Attribution</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= form.label :person_id, "Responsable", class: "form-label" %>
+          <%= form.collection_select :person_id, 
+              Person.where(role: :teacher), 
+              :id, 
+              ->(teacher) { "#{teacher.firstname} #{teacher.lastname}" },
+              { prompt: "Sélectionnez un responsable" },
+              class: "form-select" %>
+        </div>
+        <div class="col-md-4 mb-3">
+          <%= form.label :room_id, "Salle principale", class: "form-label" %>
+          <%= form.collection_select :room_id, 
+              Room.all, 
+              :id, 
+              :name, 
+              { prompt: "Sélectionnez une salle" },
+              class: "form-select" %>
+        </div>
+        <div class="col-md-4 mb-3">
+          <%= form.label :moment_id, "Période", class: "form-label" %>
+          <%= form.collection_select :moment_id, 
+              Moment.all, 
+              :id, 
+              :uid, 
+              { prompt: "Sélectionnez une période" },
+              class: "form-select" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :person_id, style: "display: block" %>
-    <%= form.collection_select :person_id, Person.where(role: :teacher), :id, :username, { prompt: "Sélectionnez un responsable" } %>
-  </div>
-
-  <div>
-    <%= form.label :room_id, style: "display: block" %>
-    <%= form.collection_select :room_id, Room.all, :id, :name, { prompt: "Sélectionnez une salle" } %>
-  </div>
-
-  <div>
-    <%= form.label :moment_id, style: "display: block" %>
-    <%= form.collection_select :moment_id, Moment.all, :id, :uid, { prompt: "Sélectionnez un moment" } %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Retour", school_classes_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>

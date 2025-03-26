@@ -1,8 +1,7 @@
 <%= form_with(model: course) do |form| %>
   <% if course.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
-
+    <div class="alert alert-danger">
+      <h2><%= pluralize(course.errors.count, "erreur") %> ont empêché la sauvegarde de ce cours :</h2>
       <ul>
         <% course.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,42 +10,81 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :start_at, style: "display: block" %>
-    <%= form.datetime_field :start_at %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Informations générales</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= form.label :classe_id, "Classe", class: "form-label" %>
+          <%= form.collection_select :classe_id, 
+              SchoolClass.all, 
+              :id, 
+              :name, 
+              { prompt: "Sélectionnez une classe" },
+              class: "form-select" %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= form.label :subject_id, "Matière", class: "form-label" %>
+          <%= form.collection_select :subject_id, 
+              Subject.all, 
+              :id, 
+              :name, 
+              { prompt: "Sélectionnez une matière" },
+              class: "form-select" %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= form.label :person_id, "Enseignant", class: "form-label" %>
+          <%= form.collection_select :person_id, 
+              Person.where(role: :teacher), 
+              :id, 
+              ->(teacher) { "#{teacher.firstname} #{teacher.lastname}" },
+              { prompt: "Sélectionnez un enseignant" },
+              class: "form-select" %>
+        </div>
+        <div class="col-md-6 mb-3">
+          <%= form.label :moment_id, "Période", class: "form-label" %>
+          <%= form.collection_select :moment_id, 
+              Moment.all, 
+              :id, 
+              :uid, 
+              { prompt: "Sélectionnez une période" },
+              class: "form-select" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :end_at, style: "display: block" %>
-    <%= form.datetime_field :end_at %>
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">Horaires</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <%= form.label :week_day, "Jour de la semaine", class: "form-label" %>
+          <%= form.select :week_day, 
+              Course.week_days.keys.map { |day| [I18n.t("date.day_names")[Course.week_days[day]], day] },
+              { prompt: "Sélectionnez un jour" },
+              class: "form-select" %>
+        </div>
+        <div class="col-md-4 mb-3">
+          <%= form.label :start_at, "Heure de début", class: "form-label" %>
+          <%= form.time_field :start_at, class: "form-control" %>
+        </div>
+        <div class="col-md-4 mb-3">
+          <%= form.label :end_at, "Heure de fin", class: "form-label" %>
+          <%= form.time_field :end_at, class: "form-control" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :week_day, style: "display: block" %>
-    <%= form.select :week_day, Course.week_days.keys.map { |day| [day.humanize, day] } %>
-  </div>
-
-  <div>
-    <%= form.label :classe_id, style: "display: block" %>
-    <%= form.collection_select :classe_id, SchoolClass.all, :id, :name, { prompt: "Sélectionnez une classe" } %>
-  </div>
-
-  <div>
-    <%= form.label :subject_id, style: "display: block" %>
-    <%= form.collection_select :subject_id, Subject.all, :id, :name, { prompt: "Sélectionnez une matière" } %>
-  </div>
-
-  <div>
-    <%= form.label :moment_id, style: "display: block" %>
-    <%= form.collection_select :moment_id, Moment.all, :id, :uid, { prompt: "Sélectionnez un moment" } %>
-  </div>
-
-  <div>
-    <%= form.label :person_id, style: "display: block" %>
-    <%= form.collection_select :person_id, Person.where(role: :teacher), :id, :username, { prompt: "Sélectionnez un enseignant" } %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Retour", courses_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>
