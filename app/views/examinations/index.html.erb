@@ -22,6 +22,7 @@
         <tr>
           <th>Titre</th>
           <th>Cours</th>
+          <th>Classe</th>
           <th>Date prévue</th>
           <th>Actions</th>
         </tr>
@@ -31,6 +32,7 @@
           <tr>
             <td><%= examination.title %></td>
             <td><%= examination.course.subject.name if examination.course&.subject.present? %></td>
+            <td><%= examination.course.school_class.name if examination.course&.school_class.present? %></td>
             <td><%= l(examination.expected_at, format: :long) if examination.expected_at.present? %></td>
             <td>
               <div class="d-flex gap-2 justify-content-end">
@@ -38,19 +40,21 @@
                   <i class="bi bi-eye-fill"></i>
                 <% end %>
 
-                <%= link_to edit_examination_path(examination), class: "btn btn-sm btn-warning", title: "Modifier" do %>
-                  <i class="bi bi-pencil-fill text-white"></i>
-                <% end %>
+                <% if current_person.admin? || (current_person.teacher? && examination.course.person_id == current_person.id) %>
+                  <%= link_to edit_examination_path(examination), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                    <i class="bi bi-pencil-fill text-white"></i>
+                  <% end %>
 
-                <%= button_to examination_path(examination), 
-                    method: :delete, 
-                    class: "btn btn-sm btn-danger", 
-                    title: "Supprimer",
-                    form: { 
-                      class: "d-inline-block",
-                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" } 
-                    } do %>
-                  <i class="bi bi-trash-fill"></i>
+                  <%= button_to examination_path(examination), 
+                      method: :delete, 
+                      class: "btn btn-sm btn-danger", 
+                      title: "Supprimer",
+                      form: { 
+                        class: "d-inline-block",
+                        data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" } 
+                      } do %>
+                    <i class="bi bi-trash-fill"></i>
+                  <% end %>
                 <% end %>
               </div>
             </td>

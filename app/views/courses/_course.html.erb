@@ -73,8 +73,13 @@
 
   <div class="col-12">
     <div class="card">
-      <div class="card-header">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="card-title mb-0">Examens prévus</h5>
+        <% if current_person.admin? || (current_person.teacher? && course.person == current_person) %>
+          <%= link_to new_examination_path(course_id: course.id), class: "btn btn-success btn-sm" do %>
+            <i class="bi bi-plus-circle"></i> Nouvel examen
+          <% end %>
+        <% end %>
       </div>
       <div class="card-body">
         <% if course.examinations.any? %>
@@ -94,9 +99,22 @@
                     <td><%= exam.expected_at.strftime("%d/%m/%Y %H:%M") %></td>
                     <td>
                       <div class="btn-group btn-group-sm">
-                        <%= link_to "Voir", exam, class: "btn btn-info" %>
-                        <%= link_to "Modifier", edit_examination_path(exam), class: "btn btn-warning" %>
-                        <%= link_to "Supprimer", exam, class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+                        <%= link_to exam, class: "btn btn-info" do %>
+                          <i class="bi bi-eye"></i> Voir
+                        <% end %>
+                        <% if current_person.admin? || (current_person.teacher? && course.person == current_person) %>
+                          <%= link_to edit_examination_path(exam), class: "btn btn-warning" do %>
+                            <i class="bi bi-pencil"></i> Modifier
+                          <% end %>
+                          <%= link_to exam, 
+                              class: "btn btn-danger", 
+                              data: { 
+                                turbo_method: :delete, 
+                                turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" 
+                              } do %>
+                            <i class="bi bi-trash"></i> Supprimer
+                          <% end %>
+                        <% end %>
                       </div>
                     </td>
                   </tr>

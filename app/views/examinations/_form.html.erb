@@ -19,7 +19,7 @@
       <div class="mb-3">
         <%= form.label :course_id, "Cours", class: "form-label" %>
         <%= form.collection_select :course_id, 
-            Course.all.includes(:subject, :school_class),
+            @courses,
             :id,
             ->(course) { "#{course.subject.name} - #{course.school_class.name}" },
             { prompt: "Sélectionnez un cours" },
