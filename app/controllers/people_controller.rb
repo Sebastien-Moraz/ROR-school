@@ -1,6 +1,7 @@
 class PeopleController < ApplicationController
   before_action :authenticate_person!
-  before_action :require_admin, except: [:edit_profile, :update_profile]
+  before_action :require_admin, except: [:index, :show, :edit_profile, :update_profile]
+  before_action :require_teacher_or_admin, only: [:index, :show]
   before_action :set_person, only: %i[ show edit update destroy ]
 
   # GET /people or /people.json
@@ -95,6 +96,13 @@ class PeopleController < ApplicationController
     def require_admin
       unless current_person&.role == 'admin'
         flash[:error] = "Accès non autorisé. Seuls les administrateurs peuvent gérer les utilisateurs."
+        redirect_to root_path
+      end
+    end
+
+    def require_teacher_or_admin
+      unless ['admin', 'teacher'].include?(current_person&.role)
+        flash[:error] = "Accès non autorisé. Seuls les professeurs et les administrateurs peuvent voir les utilisateurs."
         redirect_to root_path
       end
     end

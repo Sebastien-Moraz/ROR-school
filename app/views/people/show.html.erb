@@ -4,8 +4,10 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Détails de l'utilisateur</h1>
     <div>
-      <%= link_to edit_person_path(@person), class: "btn btn-primary me-2" do %>
-        <i class="bi bi-pencil"></i> Modifier
+      <% if current_person.admin? %>
+        <%= link_to edit_person_path(@person), class: "btn btn-primary me-2" do %>
+          <i class="bi bi-pencil"></i> Modifier
+        <% end %>
       <% end %>
       <%= link_to people_path, class: "btn btn-secondary" do %>
         <i class="bi bi-arrow-left"></i> Retour
@@ -59,7 +61,7 @@
         <div class="col-md-6">
           <h3 class="card-title mb-4">Informations complémentaires</h3>
 
-          <% if @person.iban.present? %>
+          <% if @person.iban.present? && (current_person.admin? || current_person == @person) %>
             <div class="mb-3">
               <strong>IBAN :</strong>
               <p class="text-muted mb-0"><%= @person.iban %></p>
@@ -77,12 +79,14 @@
     </div>
   </div>
 
-  <div class="mt-4 text-end">
-    <%= button_to person_path(@person), 
-                  method: :delete, 
-                  class: "btn btn-danger", 
-                  form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" } } do %>
-      <i class="bi bi-trash"></i> Supprimer cet utilisateur
-    <% end %>
-  </div>
+  <% if current_person.admin? %>
+    <div class="mt-4 text-end">
+      <%= button_to person_path(@person), 
+                    method: :delete, 
+                    class: "btn btn-danger", 
+                    form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" } } do %>
+        <i class="bi bi-trash"></i> Supprimer cet utilisateur
+      <% end %>
+    </div>
+  <% end %>
 </div>

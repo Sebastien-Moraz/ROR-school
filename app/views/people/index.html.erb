@@ -3,9 +3,11 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Gestion des personnes</h1>
-    <%= link_to new_person_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
-      <i class="bi bi-plus-circle-fill"></i>
-      <span>Nouvelle personne</span>
+    <% if current_person.admin? %>
+      <%= link_to new_person_path, class: "btn btn-success d-flex align-items-center gap-2" do %>
+        <i class="bi bi-plus-circle-fill"></i>
+        <span>Nouvelle personne</span>
+      <% end %>
     <% end %>
   </div>
 
@@ -46,19 +48,21 @@
                   <i class="bi bi-eye-fill"></i>
                 <% end %>
 
-                <%= link_to edit_person_path(person), class: "btn btn-sm btn-warning", title: "Modifier" do %>
-                  <i class="bi bi-pencil-fill text-white"></i>
-                <% end %>
+                <% if current_person.admin? %>
+                  <%= link_to edit_person_path(person), class: "btn btn-sm btn-warning", title: "Modifier" do %>
+                    <i class="bi bi-pencil-fill text-white"></i>
+                  <% end %>
 
-                <%= button_to person_path(person), 
-                    method: :delete, 
-                    class: "btn btn-sm btn-danger", 
-                    title: "Supprimer",
-                    form: { 
-                      class: "d-inline-block",
-                      data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer #{person.firstname} #{person.lastname} ?" } 
-                    } do %>
-                  <i class="bi bi-trash-fill"></i>
+                  <%= button_to person_path(person), 
+                      method: :delete, 
+                      class: "btn btn-sm btn-danger", 
+                      title: "Supprimer",
+                      form: { 
+                        class: "d-inline-block",
+                        data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer #{person.firstname} #{person.lastname} ?" } 
+                      } do %>
+                    <i class="bi bi-trash-fill"></i>
+                  <% end %>
                 <% end %>
               </div>
             </td>

@@ -87,8 +87,14 @@
                     <td><%= student.phone_number %></td>
                     <td>
                       <div class="btn-group btn-group-sm">
-                        <%= link_to "Voir", student, class: "btn btn-info" %>
-                        <%= link_to "Modifier", edit_person_path(student), class: "btn btn-warning" %>
+                        <%= link_to student, class: "btn btn-info" do %>
+                          <i class="bi bi-eye"></i> Voir
+                        <% end %>
+                        <% if current_person.admin? %>
+                          <%= link_to edit_person_path(student), class: "btn btn-warning" do %>
+                            <i class="bi bi-pencil"></i> Modifier
+                          <% end %>
+                        <% end %>
                       </div>
                     </td>
                   </tr>

@@ -11,7 +11,7 @@
 
   <div class="row">
     <!-- Liste des étudiants actuels -->
-    <div class="col-md-6">
+    <div class="<%= current_person.admin? ? 'col-md-6' : 'col-md-12' %>">
       <div class="card mb-4">
         <div class="card-header">
           <h5 class="mb-0">Étudiants inscrits</h5>
@@ -22,11 +22,13 @@
               <% @school_class.students.each do |student| %>
                 <div class="list-group-item d-flex justify-content-between align-items-center">
                   <%= "#{student.firstname} #{student.lastname}" %>
-                  <%= button_to remove_student_school_class_path(@school_class, student), 
-                      method: :delete,
-                      class: "btn btn-danger btn-sm",
-                      form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir retirer cet étudiant de la classe ?" } } do %>
-                    <i class="bi bi-trash-fill"></i>
+                  <% if current_person.admin? %>
+                    <%= button_to remove_student_school_class_path(@school_class, student), 
+                        method: :delete,
+                        class: "btn btn-danger btn-sm",
+                        form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir retirer cet étudiant de la classe ?" } } do %>
+                      <i class="bi bi-trash-fill"></i>
+                    <% end %>
                   <% end %>
                 </div>
               <% end %>
@@ -38,27 +40,29 @@
       </div>
     </div>
 
-    <!-- Formulaire d'ajout d'étudiants -->
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Ajouter des étudiants</h5>
-        </div>
-        <div class="card-body">
-          <%= form_with(url: add_student_school_class_path(@school_class), local: true) do |form| %>
-            <div class="mb-3">
-              <%= form.label :student_id, "Sélectionner un étudiant", class: "form-label" %>
-              <%= form.collection_select :student_id,
-                  Person.student.where.not(id: @school_class.student_ids),
-                  :id,
-                  ->(student) { "#{student.firstname} #{student.lastname}" },
-                  { prompt: "Choisir un étudiant" },
-                  { class: "form-select" } %>
-            </div>
-            <%= form.submit "Ajouter l'étudiant", class: "btn btn-primary" %>
-          <% end %>
+    <!-- Formulaire d'ajout d'étudiants (visible uniquement pour les admins) -->
+    <% if current_person.admin? %>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Ajouter des étudiants</h5>
+          </div>
+          <div class="card-body">
+            <%= form_with(url: add_student_school_class_path(@school_class), local: true) do |form| %>
+              <div class="mb-3">
+                <%= form.label :student_id, "Sélectionner un étudiant", class: "form-label" %>
+                <%= form.collection_select :student_id,
+                    Person.student.where.not(id: @school_class.student_ids),
+                    :id,
+                    ->(student) { "#{student.firstname} #{student.lastname}" },
+                    { prompt: "Choisir un étudiant" },
+                    { class: "form-select" } %>
+              </div>
+              <%= form.submit "Ajouter l'étudiant", class: "btn btn-primary" %>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div> 

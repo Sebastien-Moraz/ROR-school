@@ -4,9 +4,22 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Détails du cours</h1>
     <div class="btn-group">
-      <%= link_to "Modifier", edit_course_path(@course), class: "btn btn-warning" %>
-      <%= link_to "Retour", courses_path, class: "btn btn-secondary" %>
-      <%= button_to "Supprimer", @course, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce cours ?" } } %>
+      <% if current_person.admin? %>
+        <%= link_to edit_course_path(@course), class: "btn btn-warning" do %>
+          <i class="bi bi-pencil"></i> Modifier
+        <% end %>
+      <% end %>
+      <%= link_to courses_path, class: "btn btn-secondary" do %>
+        <i class="bi bi-arrow-left"></i> Retour
+      <% end %>
+      <% if current_person.admin? %>
+        <%= button_to @course, 
+                      method: :delete, 
+                      class: "btn btn-danger", 
+                      form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce cours ?" } } do %>
+          <i class="bi bi-trash"></i> Supprimer
+        <% end %>
+      <% end %>
     </div>
   </div>
 
