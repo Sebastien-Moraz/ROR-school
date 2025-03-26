@@ -57,6 +57,32 @@ class SchoolClassesController < ApplicationController
     end
   end
 
+  def manage_students
+    @school_class = SchoolClass.find(params[:id])
+  end
+
+  def add_student
+    @school_class = SchoolClass.find(params[:id])
+    student = Person.student.find(params[:student_id])
+    
+    if @school_class.students << student
+      redirect_to manage_students_school_class_path(@school_class), notice: "L'étudiant a été ajouté à la classe avec succès."
+    else
+      redirect_to manage_students_school_class_path(@school_class), alert: "Impossible d'ajouter l'étudiant à la classe."
+    end
+  end
+
+  def remove_student
+    @school_class = SchoolClass.find(params[:id])
+    student = Person.student.find(params[:student_id])
+    
+    if @school_class.students.delete(student)
+      redirect_to manage_students_school_class_path(@school_class), notice: "L'étudiant a été retiré de la classe avec succès."
+    else
+      redirect_to manage_students_school_class_path(@school_class), alert: "Impossible de retirer l'étudiant de la classe."
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_school_class

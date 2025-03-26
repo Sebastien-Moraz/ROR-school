@@ -8,7 +8,13 @@ Rails.application.routes.draw do
   resources :examinations
   resources :courses
   resources :subjects
-  resources :school_classes
+  resources :school_classes do
+    member do
+      get 'manage_students'
+      post 'add_student'
+      delete 'remove_student/:student_id', to: 'school_classes#remove_student', as: 'remove_student'
+    end
+  end
   resources :moments
   resources :rooms
   devise_for :people
