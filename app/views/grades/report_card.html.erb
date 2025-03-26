@@ -1,0 +1,117 @@
+<% content_for :title, "Mon bulletin de notes" %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1>Bulletin de notes</h1>
+      <% if current_person.admin? || current_person.teacher? %>
+        <div class="mb-3">
+          <%= form_tag report_card_grades_path, method: :get, class: "d-flex align-items-center gap-2" do %>
+            <%= select_tag :student_id,
+                options_from_collection_for_select(Person.student.order(:lastname, :firstname), :id, ->(p) { "#{p.lastname} #{p.firstname} - #{p.enrolled_classes.first&.name || 'Sans classe'}" }, params[:student_id]),
+                class: "form-select w-auto",
+                prompt: "Sélectionner un étudiant",
+                onchange: "this.form.submit()" %>
+          <% end %>
+        </div>
+      <% end %>
+      <h5 class="text-muted">
+        <%= "#{@student.firstname} #{@student.lastname}" %> - 
+        <%= @student.enrolled_classes.first.name if @student.enrolled_classes.any? %>
+      </h5>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+
+  <% if @courses.any? %>
+    <% @courses.each do |course| %>
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <%= course.subject.name %>
+            <% if course.person.present? %>
+              <small class="text-muted">- Prof. <%= "#{course.person.firstname} #{course.person.lastname}" %></small>
+            <% end %>
+          </h5>
+          <% course_average = course.examinations.joins(:grades).where(grades: { person: @student }).average('grades.value').to_f.round(2) %>
+          <% if course_average > 0 %>
+            <span class="badge <%= course_average >= 4 ? 'bg-success' : 'bg-danger' %> fs-5">
+              Moyenne: <%= course_average %>/6
+            </span>
+          <% end %>
+        </div>
+
+        <div class="card-body">
+          <% if course.examinations.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Examen</th>
+                    <th>Date</th>
+                    <th>Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% course.examinations.includes(:grades).order(expected_at: :desc).each do |exam| %>
+                    <% grade = exam.grades.find_by(person: @student) %>
+                    <tr>
+                      <td><%= exam.title %></td>
+                      <td><%= l(exam.expected_at, format: :long) if exam.expected_at.present? %></td>
+                      <td>
+                        <% if grade.present? %>
+                          <span class="badge <%= grade.value >= 4 ? 'bg-success' : 'bg-danger' %>">
+                            <%= grade.value %>/6
+                          </span>
+                        <% else %>
+                          <span class="badge bg-secondary">Non noté</span>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Aucun examen n'a encore été programmé pour ce cours.</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Moyenne générale</h5>
+        <% general_average = @courses.map { |course| 
+          course.examinations.joins(:grades).where(grades: { person: @student }).average('grades.value').to_f
+        }.reject(&:zero?).then { |averages| averages.sum / averages.size rescue 0 }.round(2) %>
+        
+        <% if general_average > 0 %>
+          <% rounded_average = (general_average * 2).ceil / 2.0 %>
+          <div class="d-flex align-items-center gap-3">
+            <span class="badge <%= rounded_average >= 4 ? 'bg-success' : 'bg-danger' %> fs-5">
+              <%= general_average %>/6
+            </span>
+            <span class="<%= rounded_average >= 4 ? 'text-success' : 'text-danger' %> fs-5">
+              <i class="bi <%= rounded_average >= 4 ? 'bi-check-circle-fill' : 'bi-x-circle-fill' %>"></i>
+              <%= rounded_average >= 4 ? "Promotion validée" : "Promotion non validée" %>
+              <small class="text-muted">(moyenne arrondie: <%= rounded_average %>)</small>
+            </span>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Pas encore de notes</p>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      Vous n'êtes inscrit à aucun cours pour le moment.
+    </div>
+  <% end %>
+</div> 

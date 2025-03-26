@@ -18,7 +18,9 @@
           <%= link_to "Classes", school_classes_path, class: "list-group-item list-group-item-action" %>
           <%= link_to "Cours", courses_path, class: "list-group-item list-group-item-action" %>
           <%= link_to "Examens", examinations_path, class: "list-group-item list-group-item-action" %>
-          <%= link_to "Notes", grades_path, class: "list-group-item list-group-item-action" %>
+          <% if current_person.student? %>
+            <%= link_to "Mon bulletin de notes", report_card_grades_path, class: "list-group-item list-group-item-action" %>
+          <% end %>
         </div>
       </div>
     <% else %>

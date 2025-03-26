@@ -1,11 +1,16 @@
 Rails.application.routes.draw do
   get "home/index"
-  resources :grades do
-    collection do
-      get 'examinations_for_course/:course_id', to: 'grades#examinations_for_course', as: 'examinations_for_course'
+  resources :grades, except: [:index, :new, :create] do
+    get 'report_card', on: :collection
+  end
+  resources :examinations do
+    member do
+      get 'manage_grades'
+      post 'add_grade'
+      patch 'update_grade/:grade_id', to: 'examinations#update_grade', as: 'update_grade'
+      delete 'remove_grade/:grade_id', to: 'examinations#remove_grade', as: 'remove_grade'
     end
   end
-  resources :examinations
   resources :courses
   resources :subjects
   resources :school_classes do

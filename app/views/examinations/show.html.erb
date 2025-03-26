@@ -4,6 +4,10 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Détails de l'examen</h1>
     <div class="btn-group">
+      <%= link_to manage_grades_examination_path(@examination), class: "btn btn-info text-white" do %>
+        <i class="bi bi-pencil-square me-1"></i>
+        Gérer les notes
+      <% end %>
       <%= link_to "Modifier", edit_examination_path(@examination), class: "btn btn-warning" %>
       <%= link_to "Retour", examinations_path, class: "btn btn-secondary" %>
       <%= button_to "Supprimer", @examination, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cet examen ?" } } %>

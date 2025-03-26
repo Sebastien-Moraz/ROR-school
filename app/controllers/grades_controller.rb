@@ -77,6 +77,38 @@ class GradesController < ApplicationController
     end
   end
 
+  def report_card
+    if current_person.student?
+      @student = current_person
+    elsif current_person.admin? || current_person.teacher?
+      @student = if params[:student_id].present?
+                  Person.student.find(params[:student_id])
+                else
+                  redirect_to report_card_grades_path(student_id: Person.student.first.id) and return
+                end
+    else
+      redirect_to root_path, alert: "Accès non autorisé" and return
+    end
+
+    @courses = if current_person.admin?
+                Course.includes(:subject, :person, examinations: :grades)
+                      .joins(school_class: :students)
+                      .where(school_class: @student.enrolled_classes)
+                      .distinct
+              elsif current_person.teacher?
+                Course.includes(:subject, :person, examinations: :grades)
+                      .joins(school_class: :students)
+                      .where(school_class: @student.enrolled_classes)
+                      .where(person: current_person)
+                      .distinct
+              else
+                Course.includes(:subject, :person, examinations: :grades)
+                      .joins(school_class: :students)
+                      .where(school_class: @student.enrolled_classes)
+                      .distinct
+              end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_grade

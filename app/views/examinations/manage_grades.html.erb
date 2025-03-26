@@ -1,0 +1,103 @@
+<% content_for :title, "Gestion des notes" %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1>Gestion des notes</h1>
+      <h5 class="text-muted">
+        <%= @examination.title %> - 
+        <%= @examination.course.subject.name %> 
+        (<%= @examination.course.school_class.name %>)
+      </h5>
+    </div>
+    <%= link_to examination_path(@examination), class: "btn btn-secondary" do %>
+      <i class="bi bi-arrow-left me-1"></i>
+      Retour à l'examen
+    <% end %>
+  </div>
+
+  <div class="row">
+    <!-- Liste des notes existantes -->
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Notes des étudiants</h5>
+        </div>
+        <div class="card-body">
+          <% if @examination.grades.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Étudiant</th>
+                    <th>Note</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @examination.grades.includes(:person).each do |grade| %>
+                    <tr>
+                      <td><%= "#{grade.person.firstname} #{grade.person.lastname}" %></td>
+                      <td>
+                        <%= form_with(url: update_grade_examination_path(@examination, grade), method: :patch, class: "d-flex align-items-center gap-2") do |form| %>
+                          <div class="input-group" style="width: 150px;">
+                            <%= form.number_field :value, value: grade.value, class: "form-control", min: 1, max: 6, step: 0.5 %>
+                            <span class="input-group-text">/6</span>
+                          </div>
+                          <%= form.submit "Modifier", class: "btn btn-warning btn-sm" %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= button_to remove_grade_examination_path(@examination, grade),
+                            method: :delete,
+                            class: "btn btn-danger btn-sm",
+                            form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } } do %>
+                          <i class="bi bi-trash-fill"></i>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Aucune note n'a encore été attribuée.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulaire d'ajout de note -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Ajouter une note</h5>
+        </div>
+        <div class="card-body">
+          <%= form_with(url: add_grade_examination_path(@examination), local: true) do |form| %>
+            <div class="mb-3">
+              <%= form.label :student_id, "Étudiant", class: "form-label" %>
+              <%= form.collection_select :student_id,
+                  @examination.course.school_class.students.where.not(id: @examination.grades.pluck(:person_id)),
+                  :id,
+                  ->(student) { "#{student.firstname} #{student.lastname}" },
+                  { prompt: "Choisir un étudiant" },
+                  { class: "form-select" } %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :value, "Note", class: "form-label" %>
+              <div class="input-group">
+                <%= form.number_field :value, class: "form-control", min: 1, max: 6, step: 0.5, placeholder: "Ex: 5.5" %>
+                <span class="input-group-text">/6</span>
+              </div>
+              <div class="form-text">Les notes vont de 1 à 6, par pas de 0.5</div>
+            </div>
+
+            <%= form.submit "Ajouter la note", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

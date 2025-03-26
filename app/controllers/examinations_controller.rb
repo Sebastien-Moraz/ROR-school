@@ -57,6 +57,47 @@ class ExaminationsController < ApplicationController
     end
   end
 
+  def manage_grades
+    @examination = Examination.includes(course: [:subject, :school_class]).find(params[:id])
+  end
+
+  def add_grade
+    @examination = Examination.find(params[:id])
+    @grade = @examination.grades.build(
+      value: params[:value],
+      person_id: params[:student_id],
+      expected_at: @examination.expected_at
+    )
+
+    if @grade.save
+      redirect_to manage_grades_examination_path(@examination), notice: "La note a été ajoutée avec succès."
+    else
+      redirect_to manage_grades_examination_path(@examination), alert: "Impossible d'ajouter la note."
+    end
+  end
+
+  def update_grade
+    @examination = Examination.find(params[:id])
+    @grade = @examination.grades.find(params[:grade_id])
+
+    if @grade.update(value: params[:value])
+      redirect_to manage_grades_examination_path(@examination), notice: "La note a été mise à jour avec succès."
+    else
+      redirect_to manage_grades_examination_path(@examination), alert: "Impossible de mettre à jour la note."
+    end
+  end
+
+  def remove_grade
+    @examination = Examination.find(params[:id])
+    @grade = @examination.grades.find(params[:grade_id])
+
+    if @grade.destroy
+      redirect_to manage_grades_examination_path(@examination), notice: "La note a été supprimée avec succès."
+    else
+      redirect_to manage_grades_examination_path(@examination), alert: "Impossible de supprimer la note."
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_examination
