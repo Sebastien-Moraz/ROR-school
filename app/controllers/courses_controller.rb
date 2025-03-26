@@ -25,7 +25,7 @@ class CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save
-        format.html { redirect_to @course, notice: "Course was successfully created." }
+        format.html { redirect_to @course, notice: "Le cours a été créé avec succès." }
         format.json { render :show, status: :created, location: @course }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class CoursesController < ApplicationController
   def update
     respond_to do |format|
       if @course.update(course_params)
-        format.html { redirect_to @course, notice: "Course was successfully updated." }
+        format.html { redirect_to @course, notice: "Le cours a été mis à jour avec succès." }
         format.json { render :show, status: :ok, location: @course }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +52,7 @@ class CoursesController < ApplicationController
     @course.destroy!
 
     respond_to do |format|
-      format.html { redirect_to courses_path, status: :see_other, notice: "Course was successfully destroyed." }
+      format.html { redirect_to courses_path, status: :see_other, notice: "Le cours a été supprimé avec succès." }
       format.json { head :no_content }
     end
   end
@@ -60,11 +60,11 @@ class CoursesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_course
-      @course = Course.find(params.expect(:id))
+      @course = Course.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def course_params
-      params.expect(course: [ :start_at, :end_at, :week_day, :classe_id, :subject_id, :moment_id, :person_id ])
+      params.require(:course).permit(:start_at, :end_at, :week_day, :school_class_id, :subject_id, :moment_id, :person_id)
     end
 end

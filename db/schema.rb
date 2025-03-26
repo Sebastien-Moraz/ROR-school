@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_26_191614) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_26_204052) do
   create_table "addresses", force: :cascade do |t|
     t.string "zip", null: false
     t.string "town", null: false
@@ -24,15 +24,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_26_191614) do
     t.datetime "start_at", null: false
     t.datetime "end_at", null: false
     t.integer "week_day", null: false
-    t.integer "classe_id", null: false
+    t.integer "school_class_id", null: false
     t.integer "subject_id", null: false
     t.integer "moment_id", null: false
     t.integer "person_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["classe_id"], name: "index_courses_on_classe_id"
     t.index ["moment_id"], name: "index_courses_on_moment_id"
     t.index ["person_id"], name: "index_courses_on_person_id"
+    t.index ["school_class_id"], name: "index_courses_on_school_class_id"
     t.index ["subject_id"], name: "index_courses_on_subject_id"
   end
 
@@ -123,9 +123,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_26_191614) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "courses", "classes", column: "classe_id"
   add_foreign_key "courses", "moments"
   add_foreign_key "courses", "people"
+  add_foreign_key "courses", "school_classes"
   add_foreign_key "courses", "subjects"
   add_foreign_key "examinations", "courses"
   add_foreign_key "grades", "examinations"

@@ -1,5 +1,5 @@
 class Course < ApplicationRecord
-  belongs_to :classe, class_name: 'SchoolClass'
+  belongs_to :school_class
   belongs_to :subject
   belongs_to :moment
   belongs_to :person  # Enseignant du cours

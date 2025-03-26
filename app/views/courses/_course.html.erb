@@ -1,37 +1,36 @@
 <div id="<%= dom_id course %>">
   <p>
-    <strong>Start at:</strong>
-    <%= course.start_at %>
+    <strong>Heure de début :</strong>
+    <%= course.start_at.strftime("%H:%M") %>
   </p>
 
   <p>
-    <strong>End at:</strong>
-    <%= course.end_at %>
+    <strong>Heure de fin :</strong>
+    <%= course.end_at.strftime("%H:%M") %>
   </p>
 
   <p>
-    <strong>Week day:</strong>
-    <%= course.week_day %>
+    <strong>Jour de la semaine :</strong>
+    <%= I18n.t("date.day_names")[Course.week_days[course.week_day]] %>
   </p>
 
   <p>
-    <strong>Classe:</strong>
-    <%= course.classe_id %>
+    <strong>Classe :</strong>
+    <%= course.school_class.name %>
   </p>
 
   <p>
-    <strong>Subject:</strong>
-    <%= course.subject_id %>
+    <strong>Matière :</strong>
+    <%= course.subject.name %>
   </p>
 
   <p>
-    <strong>Moment:</strong>
-    <%= course.moment_id %>
+    <strong>Période :</strong>
+    <%= course.moment.uid %>
   </p>
 
   <p>
-    <strong>Person:</strong>
-    <%= course.person_id %>
+    <strong>Enseignant :</strong>
+    <%= "#{course.person.firstname} #{course.person.lastname}" %>
   </p>
-
 </div>
