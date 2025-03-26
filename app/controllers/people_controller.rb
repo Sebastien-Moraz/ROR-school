@@ -38,9 +38,10 @@ class PeopleController < ApplicationController
 
   # PATCH/PUT /people/1 or /people/1.json
   def update
+    filtered_params = filter_empty_password_params(person_params)
     respond_to do |format|
-      if @person.update(person_params)
-        format.html { redirect_to @person, notice: "Person was successfully updated." }
+      if @person.update(filtered_params)
+        format.html { redirect_to @person, notice: "La personne a été mise à jour avec succès." }
         format.json { render :show, status: :ok, location: @person }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -135,5 +136,13 @@ class PeopleController < ApplicationController
         :password,
         :password_confirmation
       )
+    end
+
+    def filter_empty_password_params(params)
+      if params[:password].blank? && params[:password_confirmation].blank?
+        params.except(:password, :password_confirmation)
+      else
+        params
+      end
     end
 end
