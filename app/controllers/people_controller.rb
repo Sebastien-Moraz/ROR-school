@@ -88,15 +88,18 @@ class PeopleController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def person_params
-      permitted_params = [:username, :firstname, :lastname, :email, :phone_number, :role, :iban]
-      
-      if params[:person][:address_attributes].present?
-        permitted_params << { address_attributes: [:zip, :town, :street, :number] }
-      else
-        permitted_params << :address_id
-      end
-
-      params.require(:person).permit(permitted_params)
+      params.require(:person).permit(
+        :username,
+        :firstname,
+        :lastname,
+        :email,
+        :phone_number,
+        :role,
+        :iban,
+        :address_id,
+        :password,
+        :password_confirmation
+      )
     end
 
     def profile_params

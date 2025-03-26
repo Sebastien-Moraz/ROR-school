@@ -1,8 +1,7 @@
 <%= form_with(model: person) do |form| %>
   <% if person.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(person.errors.count, "error") %> prohibited this person from being saved:</h2>
-
+    <div class="alert alert-danger">
+      <h4><%= pluralize(person.errors.count, "erreur") %> ont empêché la sauvegarde :</h4>
       <ul>
         <% person.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,47 +10,69 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :username, style: "display: block" %>
-    <%= form.text_field :username %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :username, "Nom d'utilisateur", class: "form-label" %>
+        <%= form.text_field :username, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :firstname, "Prénom", class: "form-label" %>
+        <%= form.text_field :firstname, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :lastname, "Nom", class: "form-label" %>
+        <%= form.text_field :lastname, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :email, "Email", class: "form-label" %>
+        <%= form.email_field :email, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :phone_number, "Numéro de téléphone", class: "form-label" %>
+        <%= form.text_field :phone_number, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :password, "Mot de passe", class: "form-label" %>
+        <%= form.password_field :password, class: "form-control" %>
+        <% if person.new_record? %>
+          <div class="form-text">Le mot de passe est obligatoire pour un nouvel utilisateur.</div>
+        <% else %>
+          <div class="form-text">Laissez vide si vous ne souhaitez pas changer le mot de passe.</div>
+        <% end %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :password_confirmation, "Confirmation du mot de passe", class: "form-label" %>
+        <%= form.password_field :password_confirmation, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :role, "Rôle", class: "form-label" %>
+        <%= form.select :role, Person.roles.keys.map { |role| [role.humanize, role] }, {}, class: "form-select" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :iban, "IBAN", class: "form-label" %>
+        <%= form.text_field :iban, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :address_id, "Adresse", class: "form-label" %>
+        <%= form.collection_select :address_id, Address.all, :id, :full_address, { prompt: "Sélectionnez une adresse" }, class: "form-select" %>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :firstname, style: "display: block" %>
-    <%= form.text_field :firstname %>
-  </div>
-
-  <div>
-    <%= form.label :lastname, style: "display: block" %>
-    <%= form.text_field :lastname %>
-  </div>
-
-  <div>
-    <%= form.label :email, style: "display: block" %>
-    <%= form.text_field :email %>
-  </div>
-
-  <div>
-    <%= form.label :phone_number, style: "display: block" %>
-    <%= form.text_field :phone_number %>
-  </div>
-
-  <div>
-    <%= form.label :role, style: "display: block" %>
-    <%= form.select :role, Person.roles.keys.map { |role| [role.humanize, role] } %>
-  </div>
-
-  <div>
-    <%= form.label :iban, style: "display: block" %>
-    <%= form.text_field :iban %>
-  </div>
-
-  <div>
-    <%= form.label :address_id, style: "display: block" %>
-    <%= form.collection_select :address_id, Address.all, :id, :full_address, { prompt: "Sélectionnez une adresse" } %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit person.new_record? ? "Créer la personne" : "Mettre à jour la personne", class: "btn btn-primary" %>
+    <%= link_to "Retour", people_path, class: "btn btn-secondary ms-2" %>
   </div>
 <% end %>
