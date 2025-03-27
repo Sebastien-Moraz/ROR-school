@@ -12,61 +12,83 @@
 
   <div class="row">
     <div class="col-md-6">
-      <div class="mb-3">
-        <%= form.label :username, "Nom d'utilisateur", class: "form-label" %>
-        <%= form.text_field :username, class: "form-control" %>
-      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0">Informations personnelles</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= form.label :username, "Nom d'utilisateur", class: "form-label" %>
+            <%= form.text_field :username, class: "form-control" %>
+          </div>
 
-      <div class="mb-3">
-        <%= form.label :firstname, "Prénom", class: "form-label" %>
-        <%= form.text_field :firstname, class: "form-control" %>
-      </div>
+          <div class="mb-3">
+            <%= form.label :firstname, "Prénom", class: "form-label" %>
+            <%= form.text_field :firstname, class: "form-control" %>
+          </div>
 
-      <div class="mb-3">
-        <%= form.label :lastname, "Nom", class: "form-label" %>
-        <%= form.text_field :lastname, class: "form-control" %>
-      </div>
+          <div class="mb-3">
+            <%= form.label :lastname, "Nom", class: "form-label" %>
+            <%= form.text_field :lastname, class: "form-control" %>
+          </div>
 
-      <div class="mb-3">
-        <%= form.label :email, "Email", class: "form-label" %>
-        <%= form.email_field :email, class: "form-control" %>
-      </div>
+          <div class="mb-3">
+            <%= form.label :email, "Email", class: "form-label" %>
+            <%= form.email_field :email, class: "form-control" %>
+          </div>
 
-      <div class="mb-3">
-        <%= form.label :phone_number, "Numéro de téléphone", class: "form-label" %>
-        <%= form.text_field :phone_number, class: "form-control" %>
+          <div class="mb-3">
+            <%= form.label :phone_number, "Numéro de téléphone", class: "form-label" %>
+            <%= form.text_field :phone_number, class: "form-control" %>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="col-md-6">
-      <div class="mb-3">
-        <%= form.label :password, "Mot de passe", class: "form-label" %>
-        <%= form.password_field :password, class: "form-control" %>
-        <% if person.new_record? %>
-          <div class="form-text">Le mot de passe est obligatoire pour un nouvel utilisateur.</div>
-        <% else %>
-          <div class="form-text">Laissez vide si vous ne souhaitez pas changer le mot de passe.</div>
-        <% end %>
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0">Informations de sécurité</h5>
+        </div>
+        <div class="card-body">
+          <% unless person.new_record? %>
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle"></i> Laissez les champs de mot de passe vides si vous ne souhaitez pas le modifier.
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= form.label :password, "Mot de passe", class: "form-label" %>
+            <%= form.password_field :password, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :password_confirmation, "Confirmation du mot de passe", class: "form-label" %>
+            <%= form.password_field :password_confirmation, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :role, "Rôle", class: "form-label" %>
+            <%= form.select :role, Person.roles.keys.map { |role| [role.humanize, role] }, {}, class: "form-select" %>
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <%= form.label :password_confirmation, "Confirmation du mot de passe", class: "form-label" %>
-        <%= form.password_field :password_confirmation, class: "form-control" %>
-      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Informations administratives</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= form.label :iban, "IBAN", class: "form-label" %>
+            <%= form.text_field :iban, class: "form-control" %>
+          </div>
 
-      <div class="mb-3">
-        <%= form.label :role, "Rôle", class: "form-label" %>
-        <%= form.select :role, Person.roles.keys.map { |role| [role.humanize, role] }, {}, class: "form-select" %>
-      </div>
-
-      <div class="mb-3">
-        <%= form.label :iban, "IBAN", class: "form-label" %>
-        <%= form.text_field :iban, class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= form.label :address_id, "Adresse", class: "form-label" %>
-        <%= form.collection_select :address_id, Address.all, :id, :full_address, { prompt: "Sélectionnez une adresse" }, class: "form-select" %>
+          <div class="mb-3">
+            <%= form.label :address_id, "Adresse", class: "form-label" %>
+            <%= form.collection_select :address_id, Address.all, :id, :full_address, { prompt: "Sélectionnez une adresse" }, class: "form-select" %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
