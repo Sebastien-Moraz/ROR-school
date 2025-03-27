@@ -56,11 +56,10 @@
               <% end %>
               <% if current_person.student? %>
                 <li class="nav-item">
-                  <%= link_to "Mon bulletin de notes", report_card_grades_path, class: "nav-link" %>
+                  <%= link_to "Mon calendrier", calendar_courses_path, class: "nav-link" %>
                 </li>
-              <% else %>
                 <li class="nav-item">
-                  <%= link_to "Bulletins des étudiants", report_card_grades_path, class: "nav-link" %>
+                  <%= link_to "Mon bulletin de notes", report_card_grades_path, class: "nav-link" %>
                 </li>
               <% end %>
             <% end %>

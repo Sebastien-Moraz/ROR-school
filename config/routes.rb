@@ -11,7 +11,9 @@ Rails.application.routes.draw do
       delete 'remove_grade/:grade_id', to: 'examinations#remove_grade', as: 'remove_grade'
     end
   end
-  resources :courses
+  resources :courses do
+    get 'calendar', on: :collection
+  end
   resources :subjects
   resources :school_classes do
     member do
