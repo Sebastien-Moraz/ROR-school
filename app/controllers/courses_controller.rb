@@ -49,10 +49,15 @@ class CoursesController < ApplicationController
 
   # DELETE /courses/1 or /courses/1.json
   def destroy
+    exams_count = @course.examinations.count
+    grades_count = @course.grades.count
     @course.destroy!
 
+    message = "Le cours a été supprimé avec succès."
+    message += " #{exams_count} examen(s) et #{grades_count} note(s) ont également été supprimés." if exams_count > 0
+
     respond_to do |format|
-      format.html { redirect_to courses_path, status: :see_other, notice: "Le cours a été supprimé avec succès." }
+      format.html { redirect_to courses_path, status: :see_other, notice: message }
       format.json { head :no_content }
     end
   end
