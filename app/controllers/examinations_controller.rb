@@ -65,11 +65,19 @@ class ExaminationsController < ApplicationController
 
   # DELETE /examinations/1 or /examinations/1.json
   def destroy
-    @examination.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to examinations_path, status: :see_other, notice: "L'examen a été supprimé avec succès." }
-      format.json { head :no_content }
+    if @examination.destroy
+      respond_to do |format|
+        format.html { redirect_to examinations_path, status: :see_other, notice: "L'examen et toutes ses notes associées ont été supprimés avec succès." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { 
+          redirect_to examinations_path, 
+          alert: @examination.errors.full_messages.first || "Impossible de supprimer cet examen." 
+        }
+        format.json { render json: @examination.errors, status: :unprocessable_entity }
+      end
     end
   end
 
