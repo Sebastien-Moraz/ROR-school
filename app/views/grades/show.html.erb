@@ -5,7 +5,7 @@
     <h1>Détails de la note</h1>
     <div class="btn-group">
       <%= link_to "Modifier", edit_grade_path(@grade), class: "btn btn-warning" %>
-      <%= link_to "Retour", grades_path, class: "btn btn-secondary" %>
+      <%= link_to "Retour", examination_path(@grade.examination), class: "btn btn-secondary" %>
       <%= button_to "Supprimer", @grade, method: :delete, class: "btn btn-danger", form: { data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer cette note ?" } } %>
     </div>
   </div>
