@@ -63,3 +63,6 @@ group :test do
 end
 
 gem "devise"
+gem 'prawn'
+gem 'prawn-table'
+gem 'prawn-rails'
