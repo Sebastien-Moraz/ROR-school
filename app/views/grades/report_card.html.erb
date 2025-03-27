@@ -1,15 +1,9 @@
 <% content_for :title, "Mon bulletin de notes" %>
 
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
-      <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
-        <h1>Bulletin de notes</h1>
-        <%= link_to report_card_grades_path(format: :pdf, student_id: @student.id), class: "btn btn-primary d-flex align-items-center gap-2", target: "_blank" do %>
-          <i class="bi bi-file-pdf-fill"></i>
-          <span>Exporter en PDF</span>
-        <% end %>
-      </div>
+      <h1 class="mb-3">Bulletin de notes</h1>
       <% if current_person.admin? || current_person.teacher? %>
         <div class="mb-3">
           <%= form_tag report_card_grades_path, method: :get, class: "d-flex align-items-center gap-2" do %>
@@ -26,6 +20,10 @@
         <%= @student.enrolled_classes.first.name if @student.enrolled_classes.any? %>
       </h5>
     </div>
+    <%= link_to report_card_grades_path(format: :pdf, student_id: @student.id), class: "btn btn-primary d-flex align-items-center gap-2", target: "_blank" do %>
+      <i class="bi bi-file-pdf-fill"></i>
+      <span>Exporter en PDF</span>
+    <% end %>
   </div>
 
   <% if notice %>

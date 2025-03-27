@@ -84,11 +84,21 @@ class GradesController < ApplicationController
     if current_person.student?
       @student = current_person
     elsif current_person.admin? || current_person.teacher?
-      @student = if params[:student_id].present?
-                  Person.student.find(params[:student_id])
-                else
-                  redirect_to report_card_grades_path(student_id: Person.student.first.id) and return
-                end
+      if params[:student_id].present?
+        @student = Person.find_by(id: params[:student_id], role: 'student')
+        unless @student
+          redirect_to report_card_grades_path, 
+            alert: "L'étudiant demandé n'existe pas ou n'est pas un étudiant." and return
+        end
+      else
+        @student = Person.student.first
+        if @student
+          redirect_to report_card_grades_path(student_id: @student.id) and return
+        else
+          redirect_to root_path, 
+            alert: "Aucun étudiant n'est enregistré dans le système." and return
+        end
+      end
     else
       redirect_to root_path, alert: "Accès non autorisé" and return
     end
