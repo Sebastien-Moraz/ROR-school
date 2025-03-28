@@ -1,0 +1,91 @@
+@startuml
+
+' Styles
+skinparam class {
+    BackgroundColor White
+    ArrowColor #2688d4
+    BorderColor #2688d4
+}
+
+abstract class ApplicationRecord {
+}
+
+class Person {
+    + username: string
+    + firstname: string
+    + lastname: string
+    + phone_number: string
+    + email: string
+    + role: enum {student, teacher, admin}
+}
+
+class Address {
+    + number: string
+    + street: string
+    + zip: string
+    + town: string
+    + full_address(): string
+}
+
+class SchoolClass {
+}
+
+class Course {
+    + week_day: enum {monday, tuesday, wednesday, thursday, friday, saturday, sunday}
+    + start_at: time
+    + end_at: time
+}
+
+class Subject {
+    + name: string
+}
+
+class Room {
+    + name: string
+}
+
+class Moment {
+    + category: enum {trimester_1, trimester_2, trimester_3, trimester_4}
+    + start_date: date
+    + end_date: date
+}
+
+class Examination {
+    + name: string
+    + date: date
+}
+
+class Grade {
+    + value: decimal
+    + comment: text
+}
+
+' Héritage
+ApplicationRecord <|-- Person
+ApplicationRecord <|-- Address
+ApplicationRecord <|-- SchoolClass
+ApplicationRecord <|-- Course
+ApplicationRecord <|-- Subject
+ApplicationRecord <|-- Room
+ApplicationRecord <|-- Moment
+ApplicationRecord <|-- Examination
+ApplicationRecord <|-- Grade
+
+' Relations
+Person "1" *-- "1" Address : has
+Person "1" -- "*" SchoolClass : manages
+Person "*" -- "*" SchoolClass : enrolled in
+Person "1" -- "*" Course : teaches
+Person "1" -- "*" Grade : receives
+
+SchoolClass "1" -- "*" Course : contains
+SchoolClass "*" -- "1" Room : assigned to
+SchoolClass "*" -- "1" Moment : scheduled in
+
+Course "*" -- "1" Subject : teaches
+Course "*" -- "1" Moment : scheduled in
+Course "1" -- "*" Examination : has
+
+Examination "1" -- "*" Grade : contains
+
+@enduml 
